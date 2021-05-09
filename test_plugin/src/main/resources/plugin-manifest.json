@@ -1,0 +1,4 @@
+{
+  "id": "test_plugin",
+  "pluginClass": "org.craftit.test_plugin.TestPlugin"
+}
