@@ -151,7 +151,7 @@ abstract class QuickCommand : Command {
             val argumentsIterator = arguments.iterator()
             try {
                 argumentValues =
-                    variation.parameters.associateWith { command.parsers[it]!!.parse(argumentsIterator, issuer)!! }
+                    variation.parameters.associateWith { command.parsers[it]!!.parse(argumentsIterator, issuer) }
             } catch (ignored: Exception) {
             }
         }
