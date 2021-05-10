@@ -4,8 +4,10 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import org.craftit.api.ChatParticipant
+import org.craftit.api.Text
 import org.craftit.api.resources.entities.player.NativePlayer
 import org.craftit.runtime.source_maps.SourceMap
+import org.craftit.runtime.text.StringTextComponentFactory
 import java.lang.reflect.Method
 import java.util.*
 
@@ -49,20 +51,11 @@ class ServerPlayerEntityWrapper @AssistedInject constructor(
             setHealthMethod.invoke(serverPlayerEntity, value.toFloat())
         }
 
-    override fun sendMessage(content: String) {
+    override fun sendMessage(content: Text, sender: ChatParticipant?) {
         sendMessageMethod.invoke(
             serverPlayerEntity,
             stringTextComponentFactory.create(content),
-            chatType.SYSTEM,
-            UUID(0, 0)
-        )
-    }
-
-    override fun sendMessage(content: String, sender: ChatParticipant) {
-        sendMessageMethod.invoke(
-            serverPlayerEntity,
-            stringTextComponentFactory.create(content),
-            chatType.CHAT,
+            if (sender != null) chatType.CHAT else chatType.SYSTEM,
             UUID(0, 0)
         )
     }

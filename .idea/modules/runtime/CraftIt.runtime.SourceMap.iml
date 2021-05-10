@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.system.module.type="sourceSet" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/../../../runtime/build/generated/source/source_maps/main/classes/java/SourceMap" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../runtime/build/generated/source/source_maps/main/generated/source/kapt/SourceMap" />
+    <content url="file://$MODULE_DIR$/../../../runtime/build/generated/source/source_maps/main/generated/source/kaptKotlin/SourceMap">
+      <sourceFolder url="file://$MODULE_DIR$/../../../runtime/build/generated/source/source_maps/main/generated/source/kaptKotlin/SourceMap" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../runtime/src/SourceMap" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Gradle: kaptGeneratedClasses">
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../../../runtime/build/generated/source/source_maps/main/tmp/kapt3/classes/SourceMap" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.5.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0" level="project" />
+  </component>
+</module>

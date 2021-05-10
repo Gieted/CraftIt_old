@@ -23,11 +23,11 @@ class VanillaPlayer @AssistedInject constructor(
     override val controller: VanillaPlayerController = controllerFactory.create(this)
 
 
-    override fun sendMessage(content: String) {
+    override fun sendMessage(content: Text) {
         nativePlayer.sendMessage(content)
     }
 
-    override fun sendMessage(content: String, sender: ChatParticipant) {
+    override fun sendMessage(content: Text, sender: ChatParticipant) {
         nativePlayer.sendMessage(content, sender)
     }
 

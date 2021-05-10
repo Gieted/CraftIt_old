@@ -1,13 +1,14 @@
 plugins {
     kotlin("jvm")
     kotlin("kapt")
+    id("idea")
 }
 
 group = "org.craftit.runtime"
 version = "0.1-SNAPSHOT"
 
 repositories {
-    maven (url = "https://libraries.minecraft.net")
+    maven(url = "https://libraries.minecraft.net")
 }
 
 dependencies {
@@ -21,4 +22,70 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.6")
 
     implementation("com.mojang:brigadier:1.0.17")
+}
+
+tasks.getByPath("compileKotlin").apply {
+    dependsOn("generateSourceMap")
+}
+
+tasks.register<GenerateSourceMap>("generateSourceMap") {
+    packageName.set("org.craftit.runtime.source_maps")
+
+    scheme.set(
+        mapOf(
+            "net.minecraft.network.play.ServerPlayNetHandler" to listOf(
+                "player",
+                "handleChat",
+                "handleCommand",
+                "handleCustomCommandSuggestions"
+            ),
+
+            "net.minecraft.entity.player.ServerPlayerEntity" to listOf(
+                "resetLastActionTime",
+                "sendMessage"
+            ),
+
+            "net.minecraft.entity.LivingEntity" to listOf(
+                "getHealth",
+                "setHealth"
+            ),
+
+            "net.minecraft.server.management.PlayerList" to listOf(
+                "broadcastMessage"
+            ),
+
+            "net.minecraft.util.text.ChatType" to listOf(
+                "CHAT",
+                "SYSTEM",
+                "GAME_INFO"
+            ),
+
+            "net.minecraft.util.text.StringTextComponent" to emptyList(),
+
+            "net.minecraft.util.text.Style" to emptyList(),
+
+            "net.minecraft.util.text.IFormattableTextComponent" to listOf(
+                "withStyle",
+                "append",
+                "setStyle"
+            ),
+
+            "net.minecraft.network.play.client.CTabCompletePacket" to emptyList(),
+
+            "net.minecraft.command.Commands" to listOf(
+                "fillUsableCommands"
+            ),
+
+            "net.minecraft.command.CommandSource" to listOf(
+                "source",
+                "getPlayerOrException",
+                "getEntity"
+            ),
+
+            "net.minecraft.command.arguments.EntityArgument" to listOf(
+                "entity",
+                "entities"
+            )
+        )
+    )
 }

@@ -17,6 +17,23 @@ jvmProjects.forEach {
     }
 
     it.apply(plugin = "org.jetbrains.kotlin.jvm")
+    it.apply(plugin = "idea")
+
+    val generatedKotlinDir = it.buildDir.resolve("generated/source/kotlin/main")
+
+    it.configure<SourceSetContainer> {
+        val main by getting
+
+        main.java {
+            setSrcDirs(srcDirs + generatedKotlinDir)
+        }
+    }
+
+    it.configure<org.gradle.plugins.ide.idea.model.IdeaModel> {
+        module {
+            generatedSourceDirs.add(generatedKotlinDir)
+        }
+    }
 
     it.dependencies {
         val implementation by it.configurations

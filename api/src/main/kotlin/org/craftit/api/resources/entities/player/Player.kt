@@ -8,8 +8,6 @@ import org.craftit.api.resources.entities.HealthHolder
 
 interface Player :
     Entity,
-    CommandIssuer,
-    ChatParticipant,
     HealthHolder {
 
     val nativePlayer: NativePlayer

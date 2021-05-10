@@ -35,6 +35,15 @@ val vanilla1_16_5SourceMap = SourceMap.create {
 
     net.minecraft.util.text.StringTextComponent("oe")
 
+    net.minecraft.util.text.Style("ob")
+
+    net.minecraft.util.text.IFormattableTextComponent(
+        "nx",
+        withStyle = "c",
+        append = "a",
+        setStyle = "a",
+    )
+
     net.minecraft.network.play.client.CTabCompletePacket("sh")
 
     net.minecraft.command.Commands(
