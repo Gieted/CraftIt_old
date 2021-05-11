@@ -35,7 +35,7 @@ abstract class QuickCommand : Command {
         private operator fun CommandDefinition.CommandVariation.plus(parameter: Parameter) =
             CommandDefinition.CommandVariation(parameters + parameter)
 
-        abstract inner class Argument {
+        abstract inner class Argument<T> {
             fun registerParameter(parameter: Parameter, optional: Boolean, parser: ArgumentParser<*>?) {
                 variations = if (optional) {
                     variations.flatMap { listOf(it, it + parameter) }.toMutableList()
@@ -47,6 +47,10 @@ abstract class QuickCommand : Command {
                     parsers[parameter] = parser
                 }
             }
+
+            protected var parameter: Parameter? = null
+
+            operator fun getValue(thisRef: Any?, prop: KProperty<*>): T = argumentValues!![parameter] as T
         }
 
         inner class IntArgument<T : Int?>(
@@ -55,17 +59,13 @@ abstract class QuickCommand : Command {
             private val min: Int = Int.MIN_VALUE,
             private val max: Int = Int.MAX_VALUE,
             private val parser: ArgumentParser<Int>?
-        ) : Argument() {
-            private var parameter: Parameter? = null
-
+        ) : Argument<T>() {
             operator fun provideDelegate(thisRef: Any?, prop: KProperty<*>): IntArgument<T> {
                 parameter = NumericParameter(name ?: prop.name, min, max, Int::class)
                 registerParameter(parameter!!, optional, parser)
 
                 return this
             }
-
-            operator fun getValue(thisRef: Any?, prop: KProperty<*>): T = argumentValues!![parameter] as T
         }
 
         inner class EntityArgument<T>(
@@ -74,17 +74,13 @@ abstract class QuickCommand : Command {
             private val multiple: Boolean,
             private val playerOnly: Boolean,
             private val parser: ArgumentParser<*>?
-        ) : Argument() {
-            private var parameter: Parameter? = null
-
+        ) : Argument<T>() {
             operator fun provideDelegate(thisRef: Any?, prop: KProperty<*>): EntityArgument<T> {
                 parameter = EntityParameter(name ?: prop.name, multiple, playerOnly)
                 registerParameter(parameter!!, optional, parser)
 
                 return this
             }
-
-            operator fun getValue(thisRef: Any?, prop: KProperty<*>): T = argumentValues!![parameter] as T
         }
 
         fun intArgument(
