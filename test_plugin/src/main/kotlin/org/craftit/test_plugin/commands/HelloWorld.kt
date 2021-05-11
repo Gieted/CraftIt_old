@@ -9,7 +9,7 @@ class HelloWorld(override val id: String) : QuickCommand() {
         execute {
             issuer.sendMessage(
                 "hello"(Color.aqua, underlined = true, bold = true) + " "
-                        + "world"(Color.red, strikethrough = true, italic = true)
+                        + "world!"(Color.red, strikethrough = true, italic = true)
             )
         }
     }
