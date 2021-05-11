@@ -27,12 +27,10 @@ class CommandsModifier @Inject constructor(
 
                 val ServerPlayerEntity = sourceMap { net.minecraft.entity.player.ServerPlayerEntity }()
                 with(sourceMap { net.minecraft.command.CommandSource }) {
-                    fillUsableCommands.insertAfter(
+                    fillUsableCommands.setBody(
                         """{
                         org.craftit.api.resources.entities.player.Player player = (($ServerPlayerEntity) $3.$getEntity()).craftItPlayer;
-                        if ($2 instanceof com.mojang.brigadier.tree.RootCommandNode) {
-                            org.craftit.runtime.Bridge.rootNodeFiller.fillRootNote($2, player);
-                        }
+                        org.craftit.runtime.Bridge.rootNodeFiller.fillRootNote($2, player);
                         }"""
                     )
                 }

@@ -5,7 +5,8 @@ import java.io.OutputStream
 import java.io.OutputStreamWriter
 import java.util.*
 
-class DatelessProperties : Properties() {
+
+class ConsistentProperties : Properties() {
     companion object {
         private val hexDigit = charArrayOf(
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
@@ -135,5 +136,10 @@ class DatelessProperties : Properties() {
 
     override fun store(out: OutputStream, comments: String?) {
         store0(BufferedWriter(OutputStreamWriter(out, "8859_1")), comments)
+    }
+
+    @Synchronized
+    override fun keys(): Enumeration<Any> {
+        return Collections.enumeration(TreeSet(super.keys))
     }
 }

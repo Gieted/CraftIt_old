@@ -19,7 +19,7 @@ class PropertyManagerModifier @Inject constructor(
 
             propertyManager.getDeclaredMethod(loadFromFile, arrayOf(classPool.get("java.nio.file.Path"))).setBody(
                 """{
-                java.util.Properties properties = new org.craftit.runtime.DatelessProperties();
+                java.util.Properties properties = new org.craftit.runtime.ConsistentProperties();
 
                 try {
                     java.io.InputStream inputStream = java.nio.file.Files.newInputStream($1, new java.nio.file.OpenOption[0]);
