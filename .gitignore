@@ -122,3 +122,7 @@ test_servers/**/logs
 test_servers/**/crash-reports
 test_servers/**/usercache.json
 test_servers/**/eula.txt
+test_servers/**/banned-ips.json
+test_servers/**/banned-players.json
+test_servers/**/whitelist.json
+test_servers/**/ops.json
