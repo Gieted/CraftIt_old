@@ -20,7 +20,7 @@ class ServerPlayerEntityModifier @Inject constructor(
 
             fun addCraftItPlayerField() {
                 val craftItPlayerField = CtField.make(
-                    """org.craftit.api.resources.entities.player.Player craftItPlayer = org.craftit.runtime.CraftItBridge.playerFactory.create(this);""",
+                    """org.craftit.api.resources.entities.player.Player craftItPlayer = org.craftit.runtime.Bridge.playerFactory.create(this);""",
                     serverPlayerEntity
                 )
                 serverPlayerEntity.addField(craftItPlayerField)

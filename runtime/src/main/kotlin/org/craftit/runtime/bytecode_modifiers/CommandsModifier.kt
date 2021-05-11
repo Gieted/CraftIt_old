@@ -31,7 +31,7 @@ class CommandsModifier @Inject constructor(
                         """{
                         org.craftit.api.resources.entities.player.Player player = (($ServerPlayerEntity) $3.$getEntity()).craftItPlayer;
                         if ($2 instanceof com.mojang.brigadier.tree.RootCommandNode) {
-                            org.craftit.runtime.CraftItBridge.rootNodeFiller.fillRootNote($2, player);
+                            org.craftit.runtime.Bridge.rootNodeFiller.fillRootNote($2, player);
                         }
                         }"""
                     )

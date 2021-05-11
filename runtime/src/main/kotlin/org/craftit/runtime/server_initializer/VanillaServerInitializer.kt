@@ -1,13 +1,13 @@
 package org.craftit.runtime.server_initializer
 
-import org.craftit.runtime.CraftItBridge
+import org.craftit.runtime.Bridge
 import org.craftit.runtime.bytecode_modifiers.ServerBytecodeModifier
 import org.craftit.runtime.plugin.PluginLoader
 import javax.inject.Inject
 import javax.inject.Named
 
 class VanillaServerInitializer @Inject constructor(
-    bridge: CraftItBridge,
+    bridge: Bridge,
     bytecodeModifier: ServerBytecodeModifier,
     @Named("server") private val classLoader: ClassLoader,
     pluginLoader: PluginLoader
