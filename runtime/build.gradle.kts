@@ -85,6 +85,11 @@ tasks.register<GenerateSourceMap>("generateSourceMap") {
             "net.minecraft.command.arguments.EntityArgument" to listOf(
                 "entity",
                 "entities"
+            ),
+
+            "net.minecraft.server.dedicated.PropertyManager" to listOf(
+                "loadFromFile",
+                "LOGGER"
             )
         )
     )

@@ -63,4 +63,10 @@ val vanilla1_16_5SourceMap = SourceMap.create {
         entity = "a",
         entities = "b"
     )
+
+    net.minecraft.server.dedicated.PropertyManager(
+        "zk",
+        loadFromFile = "a",
+        LOGGER = "a"
+    )
 }
