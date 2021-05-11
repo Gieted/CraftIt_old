@@ -15,7 +15,7 @@ class ServerPlayNetHandlerModifier @Inject constructor(
 
     override fun modify() {
         with(sourceMap { net.minecraft.network.play.ServerPlayNetHandler }) {
-            val serverPlayNetHandler = classPool.get(this())!!
+            val serverPlayNetHandler = classPool.get(this())
 
             fun modifyHandleChat() {
                 val handleChat =

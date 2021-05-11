@@ -16,7 +16,7 @@ class ServerPlayerEntityModifier @Inject constructor(
 
     override fun modify() {
         with(sourceMap { net.minecraft.entity.player.ServerPlayerEntity }) {
-            val serverPlayerEntity = classPool.get(this())!!
+            val serverPlayerEntity = classPool.get(this())
 
             fun addCraftItPlayerField() {
                 val craftItPlayerField = CtField.make(

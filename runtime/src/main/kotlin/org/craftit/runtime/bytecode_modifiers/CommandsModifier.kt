@@ -16,7 +16,7 @@ class CommandsModifier @Inject constructor(
 
     override fun modify() {
         with(sourceMap { net.minecraft.command.Commands }) {
-            val serverPlayerEntity = classPool.get(this())!!
+            val serverPlayerEntity = classPool.get(this())
 
             fun modifyFillUsableCommands() {
                 val fillUsableCommands = serverPlayerEntity.declaredMethods.find {
