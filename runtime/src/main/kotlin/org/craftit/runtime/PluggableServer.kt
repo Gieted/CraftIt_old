@@ -1,10 +1,9 @@
 package org.craftit.runtime
 
 import org.craftit.api.Server
-import org.craftit.api.resources.commands.Command
-import org.craftit.runtime.resources.SingletonMapRegistry
+import org.craftit.runtime.resources.commands.CommandMapRegistry
 import javax.inject.Inject
 
-class PluggableServer @Inject constructor() : Server {
-    override val commands = SingletonMapRegistry<Command>()
+class PluggableServer @Inject constructor(commandMapRegistry: CommandMapRegistry) : Server {
+    override val commands = commandMapRegistry
 }

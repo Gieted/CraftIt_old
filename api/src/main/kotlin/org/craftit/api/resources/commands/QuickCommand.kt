@@ -33,12 +33,6 @@ abstract class QuickCommand : Command {
 
         var argumentValues: Map<Parameter, Any>? = null
 
-        private operator fun CommandDefinition.CommandVariation.plus(parameter: Parameter) =
-            CommandDefinition.CommandVariation(parameters + parameter)
-
-        private operator fun CommandDefinition.CommandVariation.plus(other: CommandDefinition.CommandVariation) =
-            CommandDefinition.CommandVariation(parameters + other.parameters)
-
         abstract inner class Argument<T> {
             fun registerParameter(parameter: Parameter, optional: Boolean, parser: ArgumentParser<*>?) {
                 variations = if (optional) {

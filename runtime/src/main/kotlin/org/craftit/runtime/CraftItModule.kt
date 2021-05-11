@@ -6,9 +6,11 @@ import dagger.Provides
 import javassist.ClassPool
 import org.craftit.api.CraftIt
 import org.craftit.api.Server
+import org.craftit.api.resources.commands.Command
 import org.craftit.api.resources.commands.CommandParser
 import org.craftit.api.resources.commands.VanillaCommandParser
 import org.craftit.runtime.configuration.Configuration
+import org.craftit.runtime.resources.commands.RootCommand
 import org.craftit.runtime.server_initializer.ServerInitializer
 import org.craftit.runtime.server_initializer.VanillaServerInitializer
 import org.craftit.runtime.source_maps.SourceMap
@@ -67,4 +69,8 @@ abstract class CraftItModule {
 
     @Binds
     abstract fun crackIt(to: CraftItApi): CraftIt
+    
+    @Binds
+    @Named("root")
+    abstract fun rootCommand(to: RootCommand): Command
 }
