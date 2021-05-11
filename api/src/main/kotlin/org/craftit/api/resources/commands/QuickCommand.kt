@@ -3,6 +3,7 @@ package org.craftit.api.resources.commands
 import org.craftit.api.resources.commands.argument_parsers.ArgumentParser
 import org.craftit.api.resources.commands.argument_parsers.EntitiesParser
 import org.craftit.api.resources.commands.argument_parsers.IntParser
+import org.craftit.api.resources.commands.argument_parsers.OptionParser
 import org.craftit.api.resources.commands.parameters.EntityParameter
 import org.craftit.api.resources.commands.parameters.NumericParameter
 import org.craftit.api.resources.commands.parameters.OptionParameter
@@ -21,10 +22,10 @@ abstract class QuickCommand : Command {
     data class ExecutionScope(val issuer: CommandIssuer)
 
     @CommandMarker
-    inner class Command(
+    inner class Command constructor(
         val issuer: CommandIssuer,
     ) {
-        var executor: (ExecutionScope.() -> Unit)? = null
+        var executors = mutableMapOf<CommandDefinition.CommandVariation, (ExecutionScope.() -> Unit)>()
         var variations =
             listOf(CommandDefinition.CommandVariation(emptyList()))
 
@@ -34,6 +35,9 @@ abstract class QuickCommand : Command {
 
         private operator fun CommandDefinition.CommandVariation.plus(parameter: Parameter) =
             CommandDefinition.CommandVariation(parameters + parameter)
+
+        private operator fun CommandDefinition.CommandVariation.plus(other: CommandDefinition.CommandVariation) =
+            CommandDefinition.CommandVariation(parameters + other.parameters)
 
         abstract inner class Argument<T> {
             fun registerParameter(parameter: Parameter, optional: Boolean, parser: ArgumentParser<*>?) {
@@ -113,20 +117,26 @@ abstract class QuickCommand : Command {
         )
 
         fun execute(executor: ExecutionScope.() -> Unit) {
-            this.executor = executor
+            this.executors[variations.last()] = executor
         }
 
         fun option(name: String, define: Command.() -> Unit) {
             val subcommand = Command(issuer)
             subcommand.define()
 
+            val optionParameter = OptionParameter(name)
+
+            this.parsers[optionParameter] = OptionParser(name)
+
             variations = variations.flatMap {
-                if (it.parameters.last() !is OptionParameter) listOf(it + OptionParameter(name))
+                if (it.parameters.isEmpty() || it.parameters.last() !is OptionParameter) listOf(it + optionParameter)
                 else listOf(
                     it,
-                    CommandDefinition.CommandVariation(it.parameters.dropLast(1) + OptionParameter(name))
+                    CommandDefinition.CommandVariation(it.parameters.dropLast(1) + optionParameter)
                 )
-            }.toMutableList()
+            }
+            
+            this.executors.putAll(subcommand.executors.mapKeys { variations.last() + it.key })
         }
     }
 
@@ -142,17 +152,17 @@ abstract class QuickCommand : Command {
     override fun execute(issuer: CommandIssuer, arguments: String) {
         val command = Command(issuer)
         command.define()
-        var argumentValues: Map<Parameter, Any>? = null
         command.variations.forEach { variation ->
             val argumentsIterator = arguments.iterator()
             try {
-                argumentValues =
+                val argumentValues =
                     variation.parameters.associateWith { command.parsers[it]!!.parse(argumentsIterator, issuer) }
+
+                command.argumentValues = argumentValues
+                command.executors[variation]?.invoke(ExecutionScope(issuer))
             } catch (ignored: Exception) {
             }
         }
-        command.argumentValues = argumentValues
-        command.executor!!.invoke(ExecutionScope(issuer))
     }
 
     override fun getSuggestions(

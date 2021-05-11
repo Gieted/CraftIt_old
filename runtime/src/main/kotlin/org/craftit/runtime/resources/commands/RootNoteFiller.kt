@@ -7,6 +7,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import com.mojang.brigadier.tree.CommandNode
 import org.craftit.api.resources.commands.parameters.EntityParameter
 import org.craftit.api.resources.commands.parameters.NumericParameter
+import org.craftit.api.resources.commands.parameters.OptionParameter
 import org.craftit.api.resources.entities.player.Player
 import javax.inject.Inject
 
@@ -27,6 +28,8 @@ class RootNoteFiller @Inject constructor(private val entityArgumentWrapper: Enti
                             it.name,
                             if (it.multiple) entityArgumentWrapper.entities() else entityArgumentWrapper.entity()
                         )
+                        
+                        it is OptionParameter -> LiteralArgumentBuilder.literal(it.name)
                         else -> throw AssertionError()
                     }.build()
                 }.forEach {

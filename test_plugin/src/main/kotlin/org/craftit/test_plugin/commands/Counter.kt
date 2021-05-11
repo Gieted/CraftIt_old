@@ -1,0 +1,23 @@
+package org.craftit.test_plugin.commands
+
+import org.craftit.api.resources.commands.QuickCommand
+
+class Counter(override val id: String) : QuickCommand() {
+    var count: Int = 0
+    
+    override fun Command.define() {
+        option("add") {
+            execute { 
+                count++
+                issuer.sendMessage(count.toString())
+            }
+        }
+        
+        option("subtract") {
+            execute { 
+                count--
+                issuer.sendMessage(count.toString())
+            }
+        }
+    }
+}
