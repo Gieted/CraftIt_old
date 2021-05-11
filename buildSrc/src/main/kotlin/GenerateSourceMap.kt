@@ -1,13 +1,4 @@
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.LambdaTypeName
-import com.squareup.kotlinpoet.TypeVariableName
-import com.squareup.kotlinpoet.UNIT
-import com.squareup.kotlinpoet.asTypeName
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.*
 import org.gradle.api.DefaultTask
 import org.gradle.api.provider.MapProperty
 import org.gradle.api.provider.Property
@@ -15,6 +6,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import java.io.File
+import javax.annotation.Generated
 
 abstract class GenerateSourceMap : DefaultTask() {
     private class Class(val name: String, val members: List<String>, val closestPackage: Package) {
@@ -91,7 +83,7 @@ abstract class GenerateSourceMap : DefaultTask() {
             ).addFunction(
                 FunSpec.builder("invoke")
                     .addModifiers(KModifier.OPERATOR)
-                    .addTypeVariable(TypeVariableName("T"))
+                    .addTypeVariable(TypeVariableName("T", ClassName("", "Class")))
                     .addParameter(
                         "browse",
                         LambdaTypeName.get(
@@ -99,9 +91,19 @@ abstract class GenerateSourceMap : DefaultTask() {
                             returnType = TypeVariableName("T")
                         )
                     )
-                    .addStatement("return browse()")
+                    .addStatement("return this.browse()")
                     .build()
-            )
+            ).addType(
+                TypeSpec.classBuilder("Class")
+                    .primaryConstructor(FunSpec.constructorBuilder().addParameter("identifier", String::class).build())
+                    .addProperty(PropertySpec.builder("identifier", String::class).initializer("identifier").build())
+                    .addModifiers(KModifier.ABSTRACT)
+                    .addFunction(
+                        FunSpec.builder("invoke").addModifiers(KModifier.OPERATOR).addStatement("return identifier")
+                            .build()
+                    )
+                    .build()
+            ).addAnnotation(Generated::class)
 
         val sourceMapBuilder = TypeSpec.classBuilder("Builder")
 
@@ -137,8 +139,8 @@ abstract class GenerateSourceMap : DefaultTask() {
                     PropertySpec.builder(childClass.name, ClassName("", className)).initializer(childClass.name).build()
                 )
                 parent.addType(
-                    TypeSpec.classBuilder(className).addModifiers(KModifier.DATA).also { typeSpec ->
-                        childClass.members.forEach {
+                    TypeSpec.classBuilder(className).also { typeSpec ->
+                        childClass.members.drop(1).forEach {
                             typeSpec.addProperty(
                                 PropertySpec.builder(it, String::class).initializer(it).build()
                             )
@@ -147,12 +149,9 @@ abstract class GenerateSourceMap : DefaultTask() {
                         FunSpec.constructorBuilder().also { constructor ->
                             childClass.members.forEach { constructor.addParameter(it, String::class) }
                         }.build()
-                    ).addFunction(
-                        FunSpec.builder("invoke")
-                            .addModifiers(KModifier.OPERATOR)
-                            .addStatement("return identifier")
-                            .build()
-                    ).build()
+                    ).superclass(ClassName("", "Class"))
+                        .addSuperclassConstructorParameter("identifier")
+                        .build()
                 )
 
                 parentBuilder.addType(TypeSpec.classBuilder(className).also { typeSpec ->
