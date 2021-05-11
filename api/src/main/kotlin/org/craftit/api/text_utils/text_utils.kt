@@ -12,7 +12,7 @@ operator fun String.invoke(
     obfuscated: Boolean = false,
     insertion: String? = null
 ) = Text(
-    Text.FormattedText(
+    Text.Fragment(
         this, Text.Properties(
             color,
             bold,

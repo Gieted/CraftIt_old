@@ -38,7 +38,7 @@ class StringTextComponentFactory @Inject constructor(
     fun create(text: Text): Any {
         var instance = constructor.newInstance("")
 
-        for (span in text.spans) {
+        for (span in text.fragments) {
             val spanInstance = constructor.newInstance(span.content)
             setStyleMethod.invoke(spanInstance, styleFactory.create(span.properties))
             instance = appendMethod.invoke(instance, spanInstance)
