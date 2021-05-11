@@ -7,7 +7,10 @@ import org.craftit.api.text_utils.invoke
 class HelloWorld(override val id: String) : QuickCommand() {
     override fun Command.define() {
         execute {
-            issuer.sendMessage("hello world!"(Color.aqua, underlined = true, bold = true))
+            issuer.sendMessage(
+                "hello"(Color.aqua, underlined = true, bold = true) + " "
+                        + "world"(Color.red, strikethrough = true, italic = true)
+            )
         }
     }
 }

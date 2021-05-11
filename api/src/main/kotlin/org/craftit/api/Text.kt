@@ -14,6 +14,8 @@ data class Text(val spans: List<FormattedText>) {
     data class FormattedText(val content: String, val properties: Properties = Properties())
 
     operator fun plus(other: Text) = Text(this.spans + other.spans)
+    
+    operator fun plus(string: String) = Text(this.spans + FormattedText(string))
 
     constructor(text: FormattedText) : this(listOf(text))
 

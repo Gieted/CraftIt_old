@@ -40,7 +40,7 @@ class StringTextComponentFactory @Inject constructor(
 
         for (span in text.spans) {
             val spanInstance = constructor.newInstance(span.content)
-            setStyleMethod.invoke(instance, styleFactory.create(span.properties))
+            setStyleMethod.invoke(spanInstance, styleFactory.create(span.properties))
             instance = appendMethod.invoke(instance, spanInstance)
         }
 
