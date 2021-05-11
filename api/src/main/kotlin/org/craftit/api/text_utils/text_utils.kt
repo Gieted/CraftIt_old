@@ -3,9 +3,26 @@ package org.craftit.api.text_utils
 import org.craftit.api.Color
 import org.craftit.api.Text
 
-infix fun String.color(color: Color) = Text(Text.FormattedText(this, Text.Formatting(color)))
-
-operator fun String.invoke(color: Color = Color.White, bold: Boolean = false) =
-    Text(Text.FormattedText(this, Text.Formatting(color, bold)))
+operator fun String.invoke(
+    color: Color = Color.white,
+    bold: Boolean = false,
+    italic: Boolean = false,
+    underlined: Boolean = false,
+    strikethrough: Boolean = false,
+    obfuscated: Boolean = false,
+    insertion: String? = null
+) = Text(
+    Text.FormattedText(
+        this, Text.Properties(
+            color,
+            bold,
+            italic,
+            underlined,
+            strikethrough,
+            obfuscated,
+            insertion
+        )
+    )
+)
 
 fun String.toText() = Text(this)

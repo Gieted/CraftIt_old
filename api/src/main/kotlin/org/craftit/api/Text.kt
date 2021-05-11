@@ -1,11 +1,19 @@
 package org.craftit.api
 
 data class Text(val spans: List<FormattedText>) {
-    data class FormattedText(val content: String, val formatting: Formatting = Formatting())
+    data class Properties(
+        val color: Color = Color.white,
+        val bold: Boolean = false,
+        val italic: Boolean = false,
+        val underlined: Boolean = false,
+        val strikethrough: Boolean = false,
+        val obfuscated: Boolean = false,
+        val insertion: String? = null
+    )
+
+    data class FormattedText(val content: String, val properties: Properties = Properties())
 
     operator fun plus(other: Text) = Text(this.spans + other.spans)
-
-    data class Formatting(val color: Color = Color.White, val bold: Boolean = false)
 
     constructor(text: FormattedText) : this(listOf(text))
 

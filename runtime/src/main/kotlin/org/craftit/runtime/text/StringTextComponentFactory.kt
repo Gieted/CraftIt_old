@@ -27,9 +27,22 @@ class StringTextComponentFactory @Inject constructor(
         }
     }
 
+    private val appendMethod: Method by lazy {
+        val iTextComponentClass = classLoader.loadClass(sourceMap { net.minecraft.util.text.ITextComponent }())
+        with(sourceMap { net.minecraft.util.text.IFormattableTextComponent }) {
+            val iFormattableTextComponent = classLoader.loadClass(this())
+            iFormattableTextComponent.getDeclaredMethod(append, iTextComponentClass)
+        }
+    }
+
     fun create(text: Text): Any {
-        val instance = constructor.newInstance(text)
-        setStyleMethod.invoke(instance, styleFactory.create())
+        var instance = constructor.newInstance("")
+
+        for (span in text.spans) {
+            val spanInstance = constructor.newInstance(span.content)
+            setStyleMethod.invoke(instance, styleFactory.create(span.properties))
+            instance = appendMethod.invoke(instance, spanInstance)
+        }
 
         return instance
     }

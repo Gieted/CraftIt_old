@@ -62,12 +62,17 @@ tasks.register<GenerateSourceMap>("generateSourceMap") {
 
             "net.minecraft.util.text.StringTextComponent" to emptyList(),
 
-            "net.minecraft.util.text.Style" to emptyList(),
+            "net.minecraft.util.text.Style" to listOf(
+                "DEFAULT_FONT"
+            ),
 
             "net.minecraft.util.text.IFormattableTextComponent" to listOf(
-                "withStyle",
                 "append",
                 "setStyle"
+            ),
+
+            "net.minecraft.util.text.Color" to listOf(
+                "parseColor",
             ),
 
             "net.minecraft.network.play.client.CTabCompletePacket" to emptyList(),
@@ -90,7 +95,13 @@ tasks.register<GenerateSourceMap>("generateSourceMap") {
             "net.minecraft.server.dedicated.PropertyManager" to listOf(
                 "loadFromFile",
                 "LOGGER"
-            )
+            ),
+
+            "net.minecraft.util.text.event.ClickEvent" to listOf(),
+            
+            "net.minecraft.util.text.event.HoverEvent" to listOf(),
+            
+            "net.minecraft.util.text.ITextComponent" to listOf(),
         )
     )
 }

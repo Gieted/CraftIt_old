@@ -96,7 +96,10 @@ abstract class GenerateSourceMap : DefaultTask() {
             ).addType(
                 TypeSpec.classBuilder("Class")
                     .primaryConstructor(FunSpec.constructorBuilder().addParameter("identifier", String::class).build())
-                    .addProperty(PropertySpec.builder("identifier", String::class).initializer("identifier").build())
+                    .addProperty(
+                        PropertySpec.builder("identifier", String::class).addModifiers(KModifier.PRIVATE)
+                            .initializer("identifier").build()
+                    )
                     .addModifiers(KModifier.ABSTRACT)
                     .addFunction(
                         FunSpec.builder("invoke").addModifiers(KModifier.OPERATOR).addStatement("return identifier")

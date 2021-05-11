@@ -35,13 +35,20 @@ val vanilla1_16_5SourceMap = SourceMap.create {
 
     net.minecraft.util.text.StringTextComponent("oe")
 
-    net.minecraft.util.text.Style("ob")
+    net.minecraft.util.text.Style(
+        "ob",
+        DEFAULT_FONT = "b"
+    )
 
     net.minecraft.util.text.IFormattableTextComponent(
         "nx",
-        withStyle = "c",
         append = "a",
         setStyle = "a",
+    )
+
+    net.minecraft.util.text.Color(
+        "od",
+        parseColor = "a"
     )
 
     net.minecraft.network.play.client.CTabCompletePacket("sh")
@@ -69,4 +76,10 @@ val vanilla1_16_5SourceMap = SourceMap.create {
         loadFromFile = "a",
         LOGGER = "a"
     )
+    
+    net.minecraft.util.text.event.ClickEvent("np")
+    
+    net.minecraft.util.text.event.HoverEvent("nv")
+    
+    net.minecraft.util.text.ITextComponent("nr")
 }
