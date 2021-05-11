@@ -121,3 +121,4 @@ test_servers/**/server
 test_servers/**/logs
 test_servers/**/crash-reports
 test_servers/**/usercache.json
+test_servers/**/eula.txt
