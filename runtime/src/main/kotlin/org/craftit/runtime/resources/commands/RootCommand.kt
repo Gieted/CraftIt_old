@@ -12,10 +12,9 @@ class RootCommand @Inject constructor() : Command {
 
     override fun getDefinition(issuer: CommandIssuer): CommandDefinition =
         CommandDefinition((issuer as Player).server.commands.flatMap { command ->
+            val commandOption = OptionParameter(command.id)
             command.getDefinition(issuer).variants.map {
-                OptionParameter(
-                    command.id
-                ) + it
+                commandOption + it
             }
         })
 
@@ -24,7 +23,7 @@ class RootCommand @Inject constructor() : Command {
         val args = arguments.split(' ').drop(1).joinToString(" ")
         val command = (issuer as Player).server.commands[id]
         if (command == null) {
-            issuer.sendMessage("Cannot find command: $id")
+            issuer.sendErrorMessage("Cannot find command: $id")
         } else {
             command.execute(issuer, args)
         }

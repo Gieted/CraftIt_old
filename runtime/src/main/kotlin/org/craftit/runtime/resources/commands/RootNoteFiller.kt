@@ -34,7 +34,5 @@ class RootNoteFiller @Inject constructor(private val entityArgumentWrapper: Enti
                 currentNode = it
             }
         }
-
-        println()
     }
 }

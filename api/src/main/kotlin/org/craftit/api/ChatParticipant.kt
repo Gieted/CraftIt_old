@@ -1,13 +1,16 @@
 package org.craftit.api
 
+import org.craftit.api.text_utils.invoke
 import org.craftit.api.text_utils.toText
 
 interface ChatParticipant {
-    fun sendMessage(content: String) = sendMessage(content.toText())
+    fun sendSystemMessage(content: String) = sendSystemMessage(content.toText())
 
-    fun sendMessage(content: Text)
+    fun sendSystemMessage(content: Text)
+    
+    fun sendErrorMessage(content: String) = sendSystemMessage(content(Color.red))
 
-    fun sendMessage(content: String, sender: ChatParticipant) = sendMessage(content.toText(), sender)
+    fun sendChatMessage(content: String, sender: ChatParticipant) = sendChatMessage(content.toText(), sender)
 
-    fun sendMessage(content: Text, sender: ChatParticipant)
+    fun sendChatMessage(content: Text, sender: ChatParticipant)
 }
