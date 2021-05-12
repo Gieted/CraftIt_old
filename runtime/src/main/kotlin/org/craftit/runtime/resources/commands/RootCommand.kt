@@ -12,7 +12,7 @@ class RootCommand @Inject constructor() : Command {
 
     override fun getDefinition(issuer: CommandIssuer): CommandDefinition =
         CommandDefinition((issuer as Player).server.commands.flatMap { command ->
-            command.getDefinition(issuer).variations.map {
+            command.getDefinition(issuer).variants.map {
                 OptionParameter(
                     command.id
                 ) + it

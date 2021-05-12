@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class RootNoteFiller @Inject constructor(private val entityArgumentWrapper: EntityArgumentWrapper) {
     fun fillRootNote(rootNode: CommandNode<Any>, player: Player) {
-        player.server.commands.root.getDefinition(player).variations.forEach { variation ->
+        player.server.commands.root.getDefinition(player).variants.forEach { variation ->
             var currentNode = rootNode
             variation.parameters.map {
                 when {

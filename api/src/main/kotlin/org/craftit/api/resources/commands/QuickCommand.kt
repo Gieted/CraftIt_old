@@ -25,9 +25,9 @@ abstract class QuickCommand : Command {
     inner class Command constructor(
         val issuer: CommandIssuer,
     ) {
-        var executors = mutableMapOf<CommandDefinition.CommandVariation, (ExecutionScope.() -> Unit)>()
+        var executors = mutableMapOf<CommandDefinition.CommandVariant, (ExecutionScope.() -> Unit)>()
         var variations =
-            listOf(CommandDefinition.CommandVariation(emptyList()))
+            listOf(CommandDefinition.CommandVariant(emptyList()))
 
         var parsers = mutableMapOf<Parameter, ArgumentParser<*>>()
 
@@ -126,7 +126,7 @@ abstract class QuickCommand : Command {
                 if (it.parameters.isEmpty() || it.parameters.last() !is OptionParameter) listOf(it + optionParameter)
                 else listOf(
                     it,
-                    CommandDefinition.CommandVariation(it.parameters.dropLast(1) + optionParameter)
+                    CommandDefinition.CommandVariant(it.parameters.dropLast(1) + optionParameter)
                 )
             }
             

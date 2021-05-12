@@ -5,6 +5,6 @@ import org.craftit.api.resources.commands.CommandDefinition
 interface Parameter {
     val name: String
 
-    operator fun plus(variation: CommandDefinition.CommandVariation): CommandDefinition.CommandVariation =
-        CommandDefinition.CommandVariation(listOf(this) + variation.parameters)
+    operator fun plus(variant: CommandDefinition.CommandVariant): CommandDefinition.CommandVariant =
+        CommandDefinition.CommandVariant(listOf(this) + variant.parameters)
 }
