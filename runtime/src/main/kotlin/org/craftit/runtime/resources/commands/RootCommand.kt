@@ -21,6 +21,11 @@ class RootCommand @Inject constructor() : Command {
     override fun execute(issuer: CommandIssuer, arguments: String) {
         val id = arguments.split(' ').first()
         val args = arguments.split(' ').drop(1).joinToString(" ")
+
+        if (id.isEmpty()) {
+            return
+        }
+            
         val command = (issuer as Player).server.commands[id]
         if (command == null) {
             issuer.sendErrorMessage("Cannot find command: $id")

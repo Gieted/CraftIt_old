@@ -4,7 +4,7 @@ val vanilla1_16_5SourceMap = SourceMap.create {
     net.minecraft.network.play.ServerPlayNetHandler(
         "aay",
         player = "b",
-        handleChat = "c",
+        handleChat = "a",
         handleCommand = "d",
         handleCustomCommandSuggestions = "a"
     )
@@ -76,10 +76,15 @@ val vanilla1_16_5SourceMap = SourceMap.create {
         loadFromFile = "a",
         LOGGER = "a"
     )
-    
+
     net.minecraft.util.text.event.ClickEvent("np")
-    
+
     net.minecraft.util.text.event.HoverEvent("nv")
-    
+
     net.minecraft.util.text.ITextComponent("nr")
+
+    net.minecraft.network.play.client.CChatMessagePacket(
+        "se",
+        getMessage = "b"
+    )
 }

@@ -1,26 +1,31 @@
 package org.craftit.api.resources.entities.player
 
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import org.craftit.api.*
 
-class VanillaPlayer @AssistedInject constructor(
-    @Assisted override val nativePlayer: NativePlayer,
+class VanillaPlayer(
+    override val nativePlayer: NativePlayer,
     inputResolverFactory: VanillaInputResolver.Factory,
     controllerFactory: VanillaPlayerController.Factory,
+    packetResolverFactory: VanillaPacketResolver.Factory,
     override val server: Server
 ) : Player {
-    @AssistedFactory
-    interface Factory {
-        fun create(nativePlayer: NativePlayer): VanillaPlayer
+
+    class Factory(
+        private val inputResolverFactory: VanillaInputResolver.Factory,
+        private val controllerFactory: VanillaPlayerController.Factory,
+        private val packetResolverFactory: VanillaPacketResolver.Factory,
+        private val server: Server
+    ) {
+        fun create(nativePlayer: NativePlayer) =
+            VanillaPlayer(nativePlayer, inputResolverFactory, controllerFactory, packetResolverFactory, server)
     }
 
     override val id: String
         get() = TODO("Not yet implemented")
 
-    override val inputResolver: InputResolver = inputResolverFactory.create(this)
+    override val inputResolver: VanillaInputResolver = inputResolverFactory.create(this)
     override val controller: VanillaPlayerController = controllerFactory.create(this)
+    override val packetResolver: VanillaPacketResolver = packetResolverFactory.create(this)
 
 
     override fun sendSystemMessage(content: Text) {

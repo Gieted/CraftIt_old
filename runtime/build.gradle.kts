@@ -98,10 +98,14 @@ tasks.register<GenerateSourceMap>("generateSourceMap") {
             ),
 
             "net.minecraft.util.text.event.ClickEvent" to listOf(),
-            
+
             "net.minecraft.util.text.event.HoverEvent" to listOf(),
-            
+
             "net.minecraft.util.text.ITextComponent" to listOf(),
+
+            "net.minecraft.network.play.client.CChatMessagePacket" to listOf(
+                "getMessage"
+            )
         )
     )
 }

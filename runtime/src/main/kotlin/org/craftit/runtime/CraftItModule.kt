@@ -10,6 +10,7 @@ import org.craftit.api.resources.commands.Command
 import org.craftit.api.resources.commands.CommandParser
 import org.craftit.api.resources.commands.VanillaCommandParser
 import org.craftit.runtime.configuration.Configuration
+import org.craftit.runtime.resources.ResourcesModule
 import org.craftit.runtime.resources.commands.RootCommand
 import org.craftit.runtime.server_initializer.ServerInitializer
 import org.craftit.runtime.server_initializer.VanillaServerInitializer
@@ -21,7 +22,7 @@ import java.security.ProtectionDomain
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Module(includes = [ServerModule::class])
+@Module(includes = [ServerModule::class, ResourcesModule::class])
 abstract class CraftItModule {
     companion object {
         @Provides

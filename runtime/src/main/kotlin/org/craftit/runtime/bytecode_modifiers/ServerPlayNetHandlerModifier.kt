@@ -1,6 +1,7 @@
 package org.craftit.runtime.bytecode_modifiers
 
 import javassist.ClassPool
+import javassist.CtMethod
 import org.craftit.runtime.source_maps.SourceMap
 import java.security.ProtectionDomain
 import javax.inject.Inject
@@ -19,16 +20,17 @@ class ServerPlayNetHandlerModifier @Inject constructor(
 
             fun modifyHandleChat() {
                 val handleChat =
-                    serverPlayNetHandler.getDeclaredMethod(handleChat, arrayOf(classPool.get("java.lang.String")))
-
-                with(sourceMap { net.minecraft.entity.player.ServerPlayerEntity }) {
-                    handleChat.setBody(
-                        """{
-                        this.$player.$resetLastActionTime();
-                        this.$player.craftItPlayer.getInputResolver().onChat($1);
-                        }"""
+                    serverPlayNetHandler.getDeclaredMethod(
+                        handleChat,
+                        arrayOf(classPool.get(sourceMap { net.minecraft.network.play.client.CChatMessagePacket }()))
                     )
-                }
+
+                val handleChatCopy = CtMethod(handleChat, serverPlayNetHandler, null)
+                handleChatCopy.name = "vanillaHandleChat"
+
+                serverPlayNetHandler.addMethod(handleChatCopy)
+
+                handleChat.setBody("""this.$player.craftItPlayer.getPacketResolver().onChatMessage(org.craftit.runtime.Bridge.packetConverter.convertCChatMessage($1));""")
             }
 
             modifyHandleChat()
