@@ -11,7 +11,7 @@ class VanillaPlayerController @AssistedInject constructor(@Assisted private val 
         fun create(player: Player): VanillaPlayerController
     }
 
-    override fun executeCommand(command: Command, arguments: String) {
-        command.execute(player, arguments)
+    override fun executeCommand(command: String) {
+        player.server.commands.root.execute(player, command)
     }
 }

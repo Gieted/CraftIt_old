@@ -14,7 +14,7 @@ class VanillaInputResolver @AssistedInject constructor(@Assisted private val pla
         fun String.isCommand() = startsWith("/")
 
         if (message.isCommand()) {
-            player.server.commands.root.execute(player, message.drop(1))
+            player.controller.executeCommand(message.drop(1))
         }
     }
 }
