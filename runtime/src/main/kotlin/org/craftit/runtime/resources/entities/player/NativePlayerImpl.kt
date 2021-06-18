@@ -5,21 +5,24 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import org.craftit.api.ChatParticipant
 import org.craftit.api.Text
+import org.craftit.api.resources.entities.player.NativeConnector
 import org.craftit.api.resources.entities.player.NativePlayer
 import org.craftit.runtime.source_maps.SourceMap
 import org.craftit.runtime.text.StringTextComponentFactory
 import java.lang.reflect.Method
 import java.util.*
 
-class ServerPlayerEntityWrapper @AssistedInject constructor(
+class NativePlayerImpl @AssistedInject constructor(
     @Assisted private val serverPlayerEntity: Any,
     sourceMap: SourceMap,
     private val stringTextComponentFactory: StringTextComponentFactory,
-    private val chatType: ChatType
+    private val chatType: ChatType,
+    private val nativeConnectorCache: NativeConnectorCache
 ) : NativePlayer {
+    
     @AssistedFactory
     interface Factory {
-        fun create(serverPlayerEntity: Any): ServerPlayerEntityWrapper
+        fun create(serverPlayerEntity: Any): NativePlayerImpl
     }
 
     private val getHealthMethod: Method
@@ -50,13 +53,5 @@ class ServerPlayerEntityWrapper @AssistedInject constructor(
         set(value) {
             setHealthMethod.invoke(serverPlayerEntity, value.toFloat())
         }
-
-    override fun sendMessage(content: Text, sender: ChatParticipant?) {
-        sendMessageMethod.invoke(
-            serverPlayerEntity,
-            stringTextComponentFactory.create(content),
-            if (sender != null) chatType.CHAT else chatType.SYSTEM,
-            UUID(0, 0)
-        )
-    }
+    override val connector: NativeConnector = nativeConnectorCache.get(serverPlayerEntity)
 }

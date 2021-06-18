@@ -26,11 +26,15 @@ class ServerPlayNetHandlerModifier @Inject constructor(
                     )
 
                 val handleChatCopy = CtMethod(handleChat, serverPlayNetHandler, null)
-                handleChatCopy.name = "vanillaHandleChat"
+                handleChatCopy.name = "nativeHandleChat"
 
                 serverPlayNetHandler.addMethod(handleChatCopy)
+                
+                @Suppress("LocalVariableName") val Bridge = "org.craftit.runtime.Bridge"
 
-                handleChat.setBody("""this.$player.craftItPlayer.getPacketResolver().onChatMessage(org.craftit.runtime.Bridge.packetConverter.convertCChatMessage($1));""")
+                handleChat.setBody(
+                    """$Bridge.connectors.get(this.$player).notify($Bridge.packetConverter.convertCChatMessage($1));"""
+                )
             }
 
             modifyHandleChat()

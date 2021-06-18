@@ -8,6 +8,7 @@ interface Player : Entity, HealthHolder {
     val nativePlayer: NativePlayer
     val inputResolver: InputResolver
     val controller: PlayerController
-    val packetResolver: PacketResolver
+    val connector: Connector
     val server: Server
+    val presenter: PlayerPresenter
 }

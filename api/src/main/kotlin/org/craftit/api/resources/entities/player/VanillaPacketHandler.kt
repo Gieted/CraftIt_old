@@ -2,9 +2,10 @@ package org.craftit.api.resources.entities.player
 
 import org.craftit.api.resources.packets.SendChatMessagePacket
 
-class VanillaPacketResolver private constructor(private val player: Player): PacketResolver {
+class VanillaPacketHandler private constructor(private val player: Player): PacketHandler {
+    
     class Factory {
-        fun create(player: Player) = VanillaPacketResolver(player)
+        fun create(player: Player) = VanillaPacketHandler(player)
     }
     
     override fun onChatMessage(packet: SendChatMessagePacket) {

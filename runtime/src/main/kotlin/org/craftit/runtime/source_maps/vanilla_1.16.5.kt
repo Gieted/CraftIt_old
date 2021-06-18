@@ -6,13 +6,15 @@ val vanilla1_16_5SourceMap = SourceMap.create {
         player = "b",
         handleChat = "a",
         handleCommand = "d",
-        handleCustomCommandSuggestions = "a"
+        handleCustomCommandSuggestions = "a",
+        send = "a"
     )
 
     net.minecraft.entity.player.ServerPlayerEntity(
         "aah",
         resetLastActionTime = "z",
-        sendMessage = "a"
+        sendMessage = "a",
+        connection = "b"
     )
 
     net.minecraft.entity.LivingEntity(
@@ -87,4 +89,8 @@ val vanilla1_16_5SourceMap = SourceMap.create {
         "se",
         getMessage = "b"
     )
+    
+    net.minecraft.network.IPacket("oj")
+
+    net.minecraft.network.play.server.SChatPacket("pb")
 }

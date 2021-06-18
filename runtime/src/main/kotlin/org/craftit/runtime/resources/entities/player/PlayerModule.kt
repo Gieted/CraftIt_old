@@ -1,27 +1,33 @@
 package org.craftit.runtime.resources.entities.player
 
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import org.craftit.api.Server
-import org.craftit.api.resources.entities.player.VanillaInputResolver
-import org.craftit.api.resources.entities.player.VanillaPacketResolver
-import org.craftit.api.resources.entities.player.VanillaPlayer
-import org.craftit.api.resources.entities.player.VanillaPlayerController
+import org.craftit.api.resources.entities.player.*
 import javax.inject.Singleton
 
 @Module
-class PlayerModule {
+abstract class PlayerModule {
+    companion object {
+        @Provides
+        @Singleton
+        fun vanillaPacketResolverFactory() = VanillaPacketHandler.Factory()
 
-    @Provides
-    @Singleton
-    fun vanillaPacketResolverFactory() = VanillaPacketResolver.Factory()
-
-    @Provides
-    @Singleton
-    fun vanillaPlayerFactory(
-        inputResolverFactory: VanillaInputResolver.Factory,
-        controllerFactory: VanillaPlayerController.Factory,
-        packetResolverFactory: VanillaPacketResolver.Factory,
-        server: Server
-    ) = VanillaPlayer.Factory(inputResolverFactory, controllerFactory, packetResolverFactory, server)
+        @Provides
+        @Singleton
+        fun vanillaPlayerFactory(
+            inputResolverFactory: VanillaInputResolver.Factory,
+            controllerFactory: VanillaPlayerController.Factory,
+            packetHandlerFactory: VanillaPacketHandler.Factory,
+            server: Server,
+            presenter: PlayerPresenter
+        ) = VanillaPlayer.Factory(inputResolverFactory, controllerFactory, packetHandlerFactory, server, presenter)
+        
+        @Provides
+        fun vanillaPresenter() = VanillaPlayerPresenter()
+    }
+    
+    @Binds
+    abstract fun presenter(to: VanillaPlayerPresenter): PlayerPresenter
 }

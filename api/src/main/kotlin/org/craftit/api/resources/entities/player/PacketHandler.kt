@@ -2,7 +2,7 @@ package org.craftit.api.resources.entities.player
 
 import org.craftit.api.resources.packets.SendChatMessagePacket
 
-interface PacketResolver {
+interface PacketHandler {
     
     fun onChatMessage(packet: SendChatMessagePacket)
 }

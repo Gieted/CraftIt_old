@@ -1,23 +1,33 @@
 package org.craftit.api.resources.entities.player
 
 import org.craftit.api.*
+import java.util.*
 
 class VanillaPlayer(
     override val nativePlayer: NativePlayer,
     inputResolverFactory: VanillaInputResolver.Factory,
     controllerFactory: VanillaPlayerController.Factory,
-    packetResolverFactory: VanillaPacketResolver.Factory,
-    override val server: Server
+    packetHandlerFactory: VanillaPacketHandler.Factory,
+    override val server: Server,
+    override val presenter: PlayerPresenter
 ) : Player {
 
     class Factory(
         private val inputResolverFactory: VanillaInputResolver.Factory,
         private val controllerFactory: VanillaPlayerController.Factory,
-        private val packetResolverFactory: VanillaPacketResolver.Factory,
-        private val server: Server
+        private val packetHandlerFactory: VanillaPacketHandler.Factory,
+        private val server: Server,
+        private val presenter: PlayerPresenter
     ) {
         fun create(nativePlayer: NativePlayer) =
-            VanillaPlayer(nativePlayer, inputResolverFactory, controllerFactory, packetResolverFactory, server)
+            VanillaPlayer(
+                nativePlayer,
+                inputResolverFactory,
+                controllerFactory,
+                packetHandlerFactory,
+                server,
+                presenter
+            )
     }
 
     override val id: String
@@ -25,15 +35,17 @@ class VanillaPlayer(
 
     override val inputResolver: VanillaInputResolver = inputResolverFactory.create(this)
     override val controller: VanillaPlayerController = controllerFactory.create(this)
-    override val packetResolver: VanillaPacketResolver = packetResolverFactory.create(this)
-
+    override val connector: VanillaConnector =
+        VanillaConnector(packetHandlerFactory.create(this), nativePlayer.connector, this)
 
     override fun sendSystemMessage(content: Text) {
-        nativePlayer.sendMessage(content)
+        presenter.addSystemMessage(content)
+        connector.update()
     }
 
     override fun sendChatMessage(content: Text, sender: ChatParticipant) {
-        nativePlayer.sendMessage(content, sender)
+        presenter.addChatMessage(content, UUID(0, 0))
+        connector.update()
     }
 
     override var health: Int

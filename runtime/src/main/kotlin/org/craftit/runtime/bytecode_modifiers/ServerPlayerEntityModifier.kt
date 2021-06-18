@@ -18,6 +18,8 @@ class ServerPlayerEntityModifier @Inject constructor(
         with(sourceMap { net.minecraft.entity.player.ServerPlayerEntity }) {
             val serverPlayerEntity = classPool.get(this())
 
+            @Suppress("LocalVariableName") val Bridge = "org.craftit.runtime.Bridge"
+
             fun addCraftItPlayerField() {
                 val craftItPlayerField = CtField.make(
                     """org.craftit.api.resources.entities.player.Player craftItPlayer = org.craftit.runtime.Bridge.playerFactory.create(this);""",

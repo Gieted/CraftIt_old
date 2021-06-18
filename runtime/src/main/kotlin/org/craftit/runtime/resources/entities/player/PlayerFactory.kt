@@ -5,7 +5,7 @@ import org.craftit.api.resources.entities.player.VanillaPlayer
 import javax.inject.Inject
 
 class PlayerFactory @Inject constructor(
-    private val nativePlayerFactory: ServerPlayerEntityWrapper.Factory,
+    private val nativePlayerFactory: NativePlayerImpl.Factory,
     private val vanillaPlayerFactory: VanillaPlayer.Factory
 ) {
     fun create(serverPlayerEntity: Any): Player {

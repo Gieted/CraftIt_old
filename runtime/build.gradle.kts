@@ -37,12 +37,14 @@ tasks.register<GenerateSourceMap>("generateSourceMap") {
                 "player",
                 "handleChat",
                 "handleCommand",
-                "handleCustomCommandSuggestions"
+                "handleCustomCommandSuggestions",
+                "send"
             ),
 
             "net.minecraft.entity.player.ServerPlayerEntity" to listOf(
                 "resetLastActionTime",
-                "sendMessage"
+                "sendMessage",
+                "connection"
             ),
 
             "net.minecraft.entity.LivingEntity" to listOf(
@@ -105,7 +107,11 @@ tasks.register<GenerateSourceMap>("generateSourceMap") {
 
             "net.minecraft.network.play.client.CChatMessagePacket" to listOf(
                 "getMessage"
-            )
+            ),
+
+            "net.minecraft.network.IPacket" to listOf(),
+
+            "net.minecraft.network.play.server.SChatPacket" to listOf()
         )
     )
 }
