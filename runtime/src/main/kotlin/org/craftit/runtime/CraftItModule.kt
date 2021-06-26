@@ -63,13 +63,13 @@ abstract class CraftItModule {
 
     @Binds
     @Singleton
-    abstract fun server(to: PluggableServer): Server
+    abstract fun server(to: RuntimeServer): Server
 
     @Binds
     abstract fun commandParser(to: VanillaCommandParser): CommandParser
 
     @Binds
-    abstract fun crackIt(to: CraftItApi): CraftIt
+    abstract fun crackIt(to: PluginApi): CraftIt
     
     @Binds
     @Named("root")

@@ -1,14 +1,25 @@
 package org.craftit.runtime.resources.entities.player
 
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import org.craftit.api.Server
 import org.craftit.api.resources.entities.player.Player
-import org.craftit.api.resources.entities.player.VanillaPlayer
-import javax.inject.Inject
+import org.craftit.api.resources.entities.player.controller.VanillaPlayerController
+import java.util.*
 
-class PlayerFactory @Inject constructor(
-    private val nativePlayerFactory: NativePlayerImpl.Factory,
-    private val vanillaPlayerFactory: VanillaPlayer.Factory
+class PlayerFactory @AssistedInject constructor(
+    @Assisted server: Server,
+    controllerFactory: VanillaPlayerController.Factory
 ) {
-    fun create(serverPlayerEntity: Any): Player {
-        return vanillaPlayerFactory.create(nativePlayerFactory.create(serverPlayerEntity))
+    @AssistedFactory
+    interface Factory {
+        fun create(server: Server): PlayerFactory
+    }
+    
+    private val vanillaPlayerFactory = VanillaPlayer.Factory(controllerFactory, server)
+    
+    fun create(uuid: UUID): Player {
+        return vanillaPlayerFactory.create(uuid)
     }
 }

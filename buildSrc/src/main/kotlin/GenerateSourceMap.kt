@@ -158,7 +158,7 @@ abstract class GenerateSourceMap : DefaultTask() {
                 )
 
                 parentBuilder.addType(TypeSpec.classBuilder(className).also { typeSpec ->
-                    val invoke = FunSpec.builder("invoke").addModifiers(KModifier.OPERATOR)
+                    val invoke = FunSpec.builder("invoke").addModifiers(KModifier.OPERATOR).returns(ClassName("", className))
                     childClass.members.forEach {
                         typeSpec.addProperty(
                             PropertySpec.builder(it, String::class.asTypeName().copy(nullable = true))
@@ -170,6 +170,8 @@ abstract class GenerateSourceMap : DefaultTask() {
                         invoke.addParameter(it, String::class)
                         invoke.addStatement("this.$it = $it")
                     }
+                    
+                    invoke.addStatement("return this")
 
                     typeSpec.addFunction(invoke.build())
 

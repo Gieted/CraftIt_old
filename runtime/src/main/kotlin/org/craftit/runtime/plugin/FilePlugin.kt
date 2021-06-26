@@ -6,13 +6,13 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import org.craftit.api.CraftIt
 import org.craftit.api.Plugin
-import org.craftit.runtime.CraftItApi
+import org.craftit.runtime.PluginApi
 import org.craftit.runtime.plugin.manifest.PluginManifest
 import java.io.File
 import java.net.URLClassLoader
 import java.util.zip.ZipFile
 
-class FilePlugin @AssistedInject constructor(@Assisted private val file: File, private val craftIt: CraftItApi) : Plugin {
+class FilePlugin @AssistedInject constructor(@Assisted private val file: File, private val craftIt: PluginApi) : Plugin {
     @AssistedFactory
     interface Factory {
         fun create(file: File): FilePlugin

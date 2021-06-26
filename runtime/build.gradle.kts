@@ -41,10 +41,15 @@ tasks.register<GenerateSourceMap>("generateSourceMap") {
                 "send"
             ),
 
+            "net.minecraft.entity.Entity" to listOf(
+                "getUUID"
+            ),
+
             "net.minecraft.entity.player.ServerPlayerEntity" to listOf(
                 "resetLastActionTime",
                 "sendMessage",
-                "connection"
+                "connection",
+                "getUUID"
             ),
 
             "net.minecraft.entity.LivingEntity" to listOf(
@@ -111,7 +116,7 @@ tasks.register<GenerateSourceMap>("generateSourceMap") {
 
             "net.minecraft.network.IPacket" to listOf(),
 
-            "net.minecraft.network.play.server.SChatPacket" to listOf()
+            "net.minecraft.network.play.server.SChatPacket" to listOf(),
         )
     )
 }

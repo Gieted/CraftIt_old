@@ -1,6 +1,5 @@
 package org.craftit.runtime.resources
 
-import org.craftit.api.resources.Registry
 import org.craftit.api.resources.Resource
 
 open class MapRegistry<T: Resource>(vararg elements: Pair<String, T>) : Registry<T> {

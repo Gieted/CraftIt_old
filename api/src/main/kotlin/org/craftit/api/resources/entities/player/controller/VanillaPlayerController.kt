@@ -1,9 +1,9 @@
-package org.craftit.api.resources.entities.player
+package org.craftit.api.resources.entities.player.controller
 
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import org.craftit.api.resources.commands.Command
+import org.craftit.api.resources.entities.player.Player
 
 class VanillaPlayerController @AssistedInject constructor(@Assisted private val player: Player) : PlayerController {
     @AssistedFactory

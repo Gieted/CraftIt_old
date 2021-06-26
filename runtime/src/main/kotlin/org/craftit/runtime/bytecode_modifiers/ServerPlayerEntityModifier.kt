@@ -7,6 +7,7 @@ import java.security.ProtectionDomain
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("LocalVariableName")
 class ServerPlayerEntityModifier @Inject constructor(
     @Named("server") private val classLoader: ClassLoader,
     private val sourceMap: SourceMap,
@@ -18,11 +19,12 @@ class ServerPlayerEntityModifier @Inject constructor(
         with(sourceMap { net.minecraft.entity.player.ServerPlayerEntity }) {
             val serverPlayerEntity = classPool.get(this())
 
-            @Suppress("LocalVariableName") val Bridge = "org.craftit.runtime.Bridge"
+            val Bridge = "org.craftit.runtime.Bridge"
+            val Player = "org.craftit.api.resources.entities.player.Player"
 
             fun addCraftItPlayerField() {
                 val craftItPlayerField = CtField.make(
-                    """org.craftit.api.resources.entities.player.Player craftItPlayer = org.craftit.runtime.Bridge.playerFactory.create(this);""",
+                    """$Player craftItPlayer = $Bridge.players.getOrCreate($getUUID(), this, $connection);""",
                     serverPlayerEntity
                 )
                 serverPlayerEntity.addField(craftItPlayerField)

@@ -9,14 +9,14 @@ class Counter(override val id: String) : QuickCommand() {
         option("add") {
             execute { 
                 count++
-                issuer.sendSystemMessage(count.toString())
+                issuer.sendMessage(count.toString())
             }
         }
         
         option("subtract") {
             execute { 
                 count--
-                issuer.sendSystemMessage(count.toString())
+                issuer.sendMessage(count.toString())
             }
         }
     }

@@ -3,16 +3,16 @@ package org.craftit.runtime.resources.entities.player
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import org.craftit.api.resources.entities.player.NativeConnector
+import org.craftit.api.resources.entities.player.connector.NativeConnector
+import org.craftit.api.resources.packets.DisplayMessagePacket
 import org.craftit.api.resources.packets.Packet
 import org.craftit.runtime.resources.packets.converters.PacketConverter
 import org.craftit.runtime.source_maps.SourceMap
-import java.lang.reflect.Method
 import javax.inject.Named
 
 @Suppress("LocalVariableName")
 class NativeConnectorImpl @AssistedInject constructor(
-    @Assisted private val serverPlayerEntity: Any,
+    @Assisted private val playNetHandler: Any,
     private val sourceMap: SourceMap,
     private val packetConverter: PacketConverter,
     @Named("server") private val classLoader: ClassLoader
@@ -20,7 +20,7 @@ class NativeConnectorImpl @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(serverPlayerEntity: Any): NativeConnectorImpl
+        fun create(playNetHandler: Any): NativeConnectorImpl
     }
     
     private val listeners = mutableListOf<(Packet) -> Unit>()
@@ -39,13 +39,7 @@ class NativeConnectorImpl @AssistedInject constructor(
         listeners.add(listener)
     }
 
-    override fun sendPacket(packet: Packet) {
-        val playNetHandler = run {
-            with(sourceMap { net.minecraft.entity.player.ServerPlayerEntity }) {
-                serverPlayerEntity::class.java.getField(connection).get(serverPlayerEntity)
-            }
-        }
-                
+    override fun sendPacket(packet: DisplayMessagePacket) {
         sendMethod.invoke(playNetHandler, packetConverter.convert(packet))
     }
 

@@ -3,9 +3,7 @@ package org.craftit.runtime.resources.entities.player
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import org.craftit.api.ChatParticipant
-import org.craftit.api.Text
-import org.craftit.api.resources.entities.player.NativeConnector
+import org.craftit.api.resources.entities.player.connector.NativeConnector
 import org.craftit.api.resources.entities.player.NativePlayer
 import org.craftit.runtime.source_maps.SourceMap
 import org.craftit.runtime.text.StringTextComponentFactory
@@ -14,6 +12,7 @@ import java.util.*
 
 class NativePlayerImpl @AssistedInject constructor(
     @Assisted private val serverPlayerEntity: Any,
+    @Assisted override val connector: NativeConnector,
     sourceMap: SourceMap,
     private val stringTextComponentFactory: StringTextComponentFactory,
     private val chatType: ChatType,
@@ -22,7 +21,7 @@ class NativePlayerImpl @AssistedInject constructor(
     
     @AssistedFactory
     interface Factory {
-        fun create(serverPlayerEntity: Any): NativePlayerImpl
+        fun create(serverPlayerEntity: Any, nativeConnector: NativeConnector): NativePlayerImpl
     }
 
     private val getHealthMethod: Method
@@ -53,5 +52,4 @@ class NativePlayerImpl @AssistedInject constructor(
         set(value) {
             setHealthMethod.invoke(serverPlayerEntity, value.toFloat())
         }
-    override val connector: NativeConnector = nativeConnectorCache.get(serverPlayerEntity)
 }

@@ -1,28 +1,22 @@
 package org.craftit.runtime
 
 import org.craftit.runtime.resources.commands.RootNoteFiller
-import org.craftit.runtime.resources.entities.player.NativeConnectorCache
-import org.craftit.runtime.resources.entities.player.PlayerFactory
+import org.craftit.runtime.resources.entities.player.RuntimePlayerRegistry
 import org.craftit.runtime.resources.packets.converters.PacketConverter
 import javax.inject.Inject
 
 class Bridge @Inject constructor(
-    private val playerFactory: PlayerFactory,
     private val rootNodeFiller: RootNoteFiller,
     private val packetConverter: PacketConverter,
-    private val nativeConnectorCache: NativeConnectorCache
-) {
+    private val server: RuntimeServer
+    ) {
     fun setup() {
-        Bridge.playerFactory = playerFactory
         Bridge.rootNodeFiller = rootNodeFiller
         Bridge.packetConverter = packetConverter
-        connectors = nativeConnectorCache
+        players = server.entities.players
     }
 
     companion object {
-        @JvmField
-        var playerFactory: PlayerFactory? = null
-
         @JvmField
         var rootNodeFiller: RootNoteFiller? = null
 
@@ -30,6 +24,6 @@ class Bridge @Inject constructor(
         var packetConverter: PacketConverter? = null
 
         @JvmField
-        var connectors: NativeConnectorCache? = null
+        var players: RuntimePlayerRegistry? = null
     }
 }

@@ -1,10 +1,15 @@
 package org.craftit.runtime.resources.entities.player
 
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import org.craftit.api.Server
-import org.craftit.api.resources.entities.player.*
+import org.craftit.api.resources.entities.player.components.OnlineComponent
+import org.craftit.api.resources.entities.player.connector.Connector
+import org.craftit.api.resources.entities.player.connector.VanillaConnector
+import org.craftit.api.resources.entities.player.connector.packet_handler.PacketHandler
+import org.craftit.api.resources.entities.player.connector.packet_handler.VanillaPacketHandler
+import org.craftit.api.resources.entities.player.input_resolver.InputResolver
+import org.craftit.api.resources.entities.player.input_resolver.VanillaInputResolver
+import org.craftit.api.resources.entities.player.presenter.Presenter
 import javax.inject.Singleton
 
 @Module
@@ -12,22 +17,29 @@ abstract class PlayerModule {
     companion object {
         @Provides
         @Singleton
-        fun vanillaPacketResolverFactory() = VanillaPacketHandler.Factory()
+        fun inputResolverFactory(): InputResolver.Factory =
+            InputResolver.Factory { player -> VanillaInputResolver(player) }
 
         @Provides
         @Singleton
-        fun vanillaPlayerFactory(
-            inputResolverFactory: VanillaInputResolver.Factory,
-            controllerFactory: VanillaPlayerController.Factory,
-            packetHandlerFactory: VanillaPacketHandler.Factory,
-            server: Server,
-            presenter: PlayerPresenter
-        ) = VanillaPlayer.Factory(inputResolverFactory, controllerFactory, packetHandlerFactory, server, presenter)
-        
+        fun rootPresenterFactory(): Presenter.Factory =
+            Presenter.Factory { player -> VanillaPresenter(player) }
+
         @Provides
-        fun vanillaPresenter() = VanillaPlayerPresenter()
+        @Singleton
+        fun connectorFactory(packetHandlerFactory: PacketHandler.Factory): Connector.Factory =
+            VanillaConnector.Factory(packetHandlerFactory)
+
+        @Provides
+        @Singleton
+        fun packetHandlerFactory(): PacketHandler.Factory = PacketHandler.Factory { player -> VanillaPacketHandler(player) }
+
+        @Provides
+        @Singleton
+        fun onlineComponentFactory(
+            inputResolverFactory: InputResolver.Factory,
+            presenterFactory: Presenter.Factory,
+            connectorFactory: Connector.Factory
+        ) = OnlineComponent.Factory(inputResolverFactory, presenterFactory, connectorFactory)
     }
-    
-    @Binds
-    abstract fun presenter(to: VanillaPlayerPresenter): PlayerPresenter
 }

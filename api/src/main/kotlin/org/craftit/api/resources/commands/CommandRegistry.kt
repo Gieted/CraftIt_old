@@ -1,7 +1,7 @@
 package org.craftit.api.resources.commands
 
-import org.craftit.api.resources.SingletonRegistry
-
-interface CommandRegistry : SingletonRegistry<Command> {
+interface CommandRegistry: Collection<Command> {
     val root: Command
+
+    operator fun get(id: String): Command?
 }

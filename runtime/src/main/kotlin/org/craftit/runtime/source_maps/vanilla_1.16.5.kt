@@ -1,5 +1,6 @@
 package org.craftit.runtime.source_maps
 
+@Suppress("LocalVariableName")
 val vanilla1_16_5SourceMap = SourceMap.create {
     net.minecraft.network.play.ServerPlayNetHandler(
         "aay",
@@ -9,12 +10,18 @@ val vanilla1_16_5SourceMap = SourceMap.create {
         handleCustomCommandSuggestions = "a",
         send = "a"
     )
+    
+    val Entity = net.minecraft.entity.Entity(
+        "aqa",
+        getUUID = "bS"
+    )
 
     net.minecraft.entity.player.ServerPlayerEntity(
         "aah",
         resetLastActionTime = "z",
         sendMessage = "a",
-        connection = "b"
+        connection = "b",
+        getUUID = Entity.getUUID!!
     )
 
     net.minecraft.entity.LivingEntity(

@@ -4,6 +4,11 @@ import org.craftit.api.Text
 import org.craftit.api.resources.Resource
 
 interface Command : Resource {
+
+    fun interface Factory {
+        fun create(id: String): Command
+    }
+    
     fun getDefinition(issuer: CommandIssuer): CommandDefinition
 
     fun execute(issuer: CommandIssuer, arguments: String)
