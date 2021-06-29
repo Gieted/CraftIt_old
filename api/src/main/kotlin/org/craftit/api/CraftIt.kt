@@ -1,13 +1,15 @@
 package org.craftit.api
 
 import org.craftit.api.resources.IdGenerator
+import org.craftit.api.resources.plugin.Plugin
 import org.craftit.api.resources.commands.Command
-import org.craftit.api.resources.entities.player.Player
+import java.util.*
 
 interface CraftIt {
     val commands: Commands
     val idGenerator: IdGenerator
     val entities: Entities
+    val pluginId: String
 
     fun plugin(commands: RegisterCommands.() -> Unit): Plugin
 
@@ -20,10 +22,10 @@ interface CraftIt {
     }
 
     interface Entities {
-        val player: PlayerPrototype
+        val player: Player
 
-        interface PlayerPrototype {
-            fun vanilla(): Player
+        interface Player {
+            fun vanilla(uuid: UUID): org.craftit.api.resources.entities.player.Player
         }
     }
 }

@@ -1,7 +1,7 @@
 package org.craftit.test_plugin
 
 import org.craftit.api.CraftIt
-import org.craftit.api.Plugin
+import org.craftit.api.resources.plugin.Plugin
 import org.craftit.test_plugin.commands.Counter
 import org.craftit.test_plugin.commands.Heal
 import org.craftit.test_plugin.commands.HelloWorld

@@ -15,7 +15,7 @@ class NativeConnectorImpl @AssistedInject constructor(
     @Assisted private val playNetHandler: Any,
     private val sourceMap: SourceMap,
     private val packetConverter: PacketConverter,
-    @Named("server") private val classLoader: ClassLoader
+    private val classLoader: ClassLoader
 ) : NativeConnector {
 
     @AssistedFactory

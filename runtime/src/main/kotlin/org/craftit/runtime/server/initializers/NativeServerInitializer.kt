@@ -1,17 +1,14 @@
-package org.craftit.runtime.server_initializer
+package org.craftit.runtime.server.initializers
 
 import org.craftit.runtime.Bridge
 import org.craftit.runtime.bytecode_modifiers.ServerBytecodeModifier
-import org.craftit.runtime.plugin.PluginLoader
 
-abstract class ServerInitializer(
+abstract class NativeServerInitializer(
     private val bridge: Bridge,
     private val bytecodeModifier: ServerBytecodeModifier,
-    private val pluginLoader: PluginLoader
 ) {
     open fun startServer() {
-        bytecodeModifier.modify()
         bridge.setup()
-        pluginLoader.loadPlugins()
+        bytecodeModifier.modify()
     }
 }

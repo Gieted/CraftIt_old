@@ -7,7 +7,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class PropertyManagerModifier @Inject constructor(
-    @Named("server") private val classLoader: ClassLoader,
+    private val classLoader: ClassLoader,
     private val sourceMap: SourceMap,
     private val classPool: ClassPool,
     private val protectionDomain: ProtectionDomain

@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Suppress("PropertyName")
-class ChatType @Inject constructor(sourceMap: SourceMap, @Named("server") classLoader: ClassLoader) {
+class ChatType @Inject constructor(sourceMap: SourceMap, classLoader: ClassLoader) {
     val CHAT: Any
     val SYSTEM: Any
     val GAME_INFO: Any
@@ -21,3 +21,4 @@ class ChatType @Inject constructor(sourceMap: SourceMap, @Named("server") classL
         }
     }
 }
+

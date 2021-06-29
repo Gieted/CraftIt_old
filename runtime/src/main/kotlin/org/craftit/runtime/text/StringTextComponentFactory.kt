@@ -9,7 +9,7 @@ import javax.inject.Named
 
 class StringTextComponentFactory @Inject constructor(
     sourceMap: SourceMap,
-    @Named("server") classLoader: ClassLoader,
+    classLoader: ClassLoader,
     private val styleFactory: StyleFactory
 ) {
     private val constructor: Constructor<*> by lazy {

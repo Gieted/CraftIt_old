@@ -7,20 +7,20 @@ import org.craftit.api.*
 import org.craftit.api.chat.ChatParticipant
 import org.craftit.api.resources.components.ComponentStore
 import org.craftit.api.resources.entities.player.Player
-import org.craftit.api.resources.entities.player.components.OnlineComponent
 import org.craftit.api.resources.entities.player.components.PlayerComponent
 import org.craftit.api.resources.entities.player.controller.VanillaPlayerController
+import org.craftit.runtime.resources.entities.player.components.online_component.VanillaOnlineComponent
 import java.util.*
 
 class VanillaPlayer @AssistedInject constructor(
     controllerFactory: VanillaPlayerController.Factory,
-    override val server: Server,
+    @Assisted override val server: Server,
     @Assisted override val uuid: UUID
 ) : Player {
     
     @AssistedFactory
     interface Factory {
-        fun create(uuid: UUID): VanillaPlayer
+        fun create(uuid: UUID, server: Server): VanillaPlayer
     }
     
     override val controller: VanillaPlayerController = controllerFactory.create(this)
@@ -30,16 +30,16 @@ class VanillaPlayer @AssistedInject constructor(
         get() = uuid.toString()
 
     override fun sendMessage(content: Text) {
-        components[OnlineComponent::class]?.sendMessage(content)
+        components[VanillaOnlineComponent::class]?.sendMessage(content)
     }
 
     override fun sendMessage(content: Text, sender: ChatParticipant) {
-        components[OnlineComponent::class]?.sendMessage(content, sender)
+        components[VanillaOnlineComponent::class]?.sendMessage(content, sender)
     }
 
     override var health: Int
-        get() = components[OnlineComponent::class]!!.nativePlayer.health
+        get() = components[VanillaOnlineComponent::class]!!.nativePlayer.health
         set(value) {
-            components[OnlineComponent::class]!!.nativePlayer.health = value
+            components[VanillaOnlineComponent::class]!!.nativePlayer.health = value
         }
 }

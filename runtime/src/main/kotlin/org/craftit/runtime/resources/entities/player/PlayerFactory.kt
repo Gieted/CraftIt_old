@@ -9,17 +9,15 @@ import org.craftit.api.resources.entities.player.controller.VanillaPlayerControl
 import java.util.*
 
 class PlayerFactory @AssistedInject constructor(
-    @Assisted server: Server,
-    controllerFactory: VanillaPlayerController.Factory
+    @Assisted private val server: Server,
+    private val vanillaPlayerFactory: VanillaPlayer.Factory
 ) {
     @AssistedFactory
     interface Factory {
         fun create(server: Server): PlayerFactory
     }
     
-    private val vanillaPlayerFactory = VanillaPlayer.Factory(controllerFactory, server)
-    
     fun create(uuid: UUID): Player {
-        return vanillaPlayerFactory.create(uuid)
+        return vanillaPlayerFactory.create(uuid, server)
     }
 }

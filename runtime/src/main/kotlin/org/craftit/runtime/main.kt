@@ -13,7 +13,7 @@ fun main() {
     }
 
     val configuration = loadConfiguration()
-    val component: CraftItComponent = DaggerCraftItComponent.factory().create(configuration)
+    val component: MainComponent = DaggerMainComponent.factory().create(configuration)
 
-    component.serverInitializer().startServer()
+    component.server().start()
 }

@@ -8,7 +8,7 @@ import javax.inject.Named
 
 @Suppress("LocalVariableName")
 class CommandsModifier @Inject constructor(
-    @Named("server") private val classLoader: ClassLoader,
+    private val classLoader: ClassLoader,
     private val sourceMap: SourceMap,
     private val classPool: ClassPool,
     private val protectionDomain: ProtectionDomain

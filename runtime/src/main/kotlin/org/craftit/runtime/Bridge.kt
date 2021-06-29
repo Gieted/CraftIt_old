@@ -1,15 +1,18 @@
 package org.craftit.runtime
 
+import org.craftit.api.Server
+import org.craftit.api.resources.entities.player.PlayerRegistry
 import org.craftit.runtime.resources.commands.RootNoteFiller
-import org.craftit.runtime.resources.entities.player.RuntimePlayerRegistry
 import org.craftit.runtime.resources.packets.converters.PacketConverter
+import org.craftit.runtime.server.ServerScope
 import javax.inject.Inject
 
+@ServerScope
 class Bridge @Inject constructor(
     private val rootNodeFiller: RootNoteFiller,
     private val packetConverter: PacketConverter,
-    private val server: RuntimeServer
-    ) {
+    private val server: Server
+) {
     fun setup() {
         Bridge.rootNodeFiller = rootNodeFiller
         Bridge.packetConverter = packetConverter
@@ -24,6 +27,6 @@ class Bridge @Inject constructor(
         var packetConverter: PacketConverter? = null
 
         @JvmField
-        var players: RuntimePlayerRegistry? = null
+        var players: PlayerRegistry? = null
     }
 }

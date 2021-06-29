@@ -2,13 +2,17 @@ package org.craftit.runtime.configuration
 
 import dagger.Module
 import dagger.Provides
-import org.craftit.runtime.ServerModule
 import java.io.File
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Module(includes = [ServerModule::class])
+@Module
 class ConfigurationModule {
+    @Provides
+    @Singleton
+    @Named("serverDirectory")
+    fun serverDirectory(): File = File("")
+    
     @Provides
     @Singleton
     @Named("configuration")

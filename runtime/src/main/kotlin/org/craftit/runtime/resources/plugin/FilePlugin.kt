@@ -1,21 +1,26 @@
-package org.craftit.runtime.plugin
+package org.craftit.runtime.resources.plugin
 
 import com.google.gson.Gson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import org.craftit.api.CraftIt
-import org.craftit.api.Plugin
-import org.craftit.runtime.PluginApi
-import org.craftit.runtime.plugin.manifest.PluginManifest
+import org.craftit.api.Server
+import org.craftit.api.resources.plugin.Plugin
+import org.craftit.runtime.resources.plugin.manifest.PluginManifest
 import java.io.File
 import java.net.URLClassLoader
 import java.util.zip.ZipFile
 
-class FilePlugin @AssistedInject constructor(@Assisted private val file: File, private val craftIt: PluginApi) : Plugin {
+class FilePlugin @AssistedInject constructor(
+    @Assisted private val file: File,
+    @Assisted private val server: Server,
+    private val pluginApiFactory: PluginApi.Factory
+) : Plugin {
+
     @AssistedFactory
     interface Factory {
-        fun create(file: File): FilePlugin
+        fun create(file: File, server: Server): FilePlugin
     }
 
     private val gson = Gson()
@@ -32,7 +37,11 @@ class FilePlugin @AssistedInject constructor(@Assisted private val file: File, p
         val manifest = loadManifest()
         val classLoader = URLClassLoader(arrayOf(file.toURI().toURL()))
         val pluginClass = classLoader.loadClass(manifest.pluginClass)
-        plugin = pluginClass.getConstructor(CraftIt::class.java).newInstance(craftIt) as Plugin
+        val pluginApi = pluginApiFactory.create(server, manifest.id)
+        plugin = pluginClass.getConstructor(CraftIt::class.java).newInstance(pluginApi) as Plugin
         plugin!!.enable()
     }
+
+    override val id: String
+        get() = plugin?.id ?: loadManifest().id
 }

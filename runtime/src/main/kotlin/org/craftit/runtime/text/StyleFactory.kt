@@ -3,14 +3,13 @@ package org.craftit.runtime.text
 import org.craftit.api.Text
 import org.craftit.runtime.source_maps.SourceMap
 import javax.inject.Inject
-import javax.inject.Named
 
 class StyleFactory @Inject constructor(
     sourceMap: SourceMap,
-    @Named("server") classLoader: ClassLoader,
+    classLoader: ClassLoader,
     private val nativeColorFactory: NativeColorFactory
 ) {
-    private val contructor by lazy {
+    private val constructor by lazy {
         with(sourceMap { net.minecraft.util.text.Style }) {
             val style = classLoader.loadClass(this())
             val constructor = style.declaredConstructors.find { it.parameterCount == 10 }!!
@@ -37,7 +36,7 @@ class StyleFactory @Inject constructor(
         val insertion = properties.insertion
         val font = defaultFont
 
-        return contructor.newInstance(
+        return constructor.newInstance(
             color,
             bold,
             italic,

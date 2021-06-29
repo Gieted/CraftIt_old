@@ -6,7 +6,7 @@ import javax.inject.Named
 
 class NativeColorFactory @Inject constructor(
     sourceMap: SourceMap,
-    @Named("server") classLoader: ClassLoader) {
+    classLoader: ClassLoader) {
     
     private val parseColor by lazy {
         with(sourceMap { net.minecraft.util.text.Color }) {
