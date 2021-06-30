@@ -9,7 +9,7 @@ import javax.inject.Named
 
 @Suppress("LocalVariableName")
 class ServerPlayerEntityModifier @Inject constructor(
-    private val classLoader: ClassLoader,
+    @Named("server") private val classLoader: ClassLoader,
     private val sourceMap: SourceMap,
     private val classPool: ClassPool,
     private val protectionDomain: ProtectionDomain

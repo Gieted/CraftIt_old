@@ -5,10 +5,13 @@ import org.craftit.runtime.resources.entities.player.ChatType
 import org.craftit.runtime.source_maps.SourceMap
 import org.craftit.runtime.text.StringTextComponentFactory
 import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
 
+@Singleton
 class DisplayMessageConverter @Inject constructor(
     private val sourceMap: SourceMap,
-    private val classLoader: ClassLoader,
+    @Named("server") private val classLoader: ClassLoader,
     private val stringTextComponentFactory: StringTextComponentFactory,
     private val chatType: ChatType
 ) {

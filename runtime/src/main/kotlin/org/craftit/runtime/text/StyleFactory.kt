@@ -3,10 +3,13 @@ package org.craftit.runtime.text
 import org.craftit.api.Text
 import org.craftit.runtime.source_maps.SourceMap
 import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
 
+@Singleton
 class StyleFactory @Inject constructor(
     sourceMap: SourceMap,
-    classLoader: ClassLoader,
+    @Named("server") classLoader: ClassLoader,
     private val nativeColorFactory: NativeColorFactory
 ) {
     private val constructor by lazy {

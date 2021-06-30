@@ -1,12 +1,16 @@
-
 package org.craftit.runtime.resources.entities.player
 
 import org.craftit.runtime.source_maps.SourceMap
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Suppress("PropertyName")
-class ChatType @Inject constructor(sourceMap: SourceMap, classLoader: ClassLoader) {
+@Singleton
+class ChatType @Inject constructor(
+    sourceMap: SourceMap,
+    @Named("server") classLoader: ClassLoader
+) {
     val CHAT: Any
     val SYSTEM: Any
     val GAME_INFO: Any

@@ -13,7 +13,7 @@ class VanillaServer @Inject constructor(
 ) : Server {
 
     override val entities: EntityRegistry
-    override  val commands: CommandRegistry
+    override val commands: CommandRegistry
     override val plugins: PluginRegistry
 
     private val pluginLoader: PluginLoader

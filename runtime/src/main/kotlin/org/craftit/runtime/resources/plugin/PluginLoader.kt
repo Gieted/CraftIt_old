@@ -1,10 +1,12 @@
 package org.craftit.runtime.resources.plugin
 
 import org.craftit.api.Server
+import org.craftit.runtime.server.ServerScope
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
+@ServerScope
 class PluginLoader @Inject constructor(
     private val server: Server,
     @Named("pluginsDirectory") private val pluginsDirectory: File,

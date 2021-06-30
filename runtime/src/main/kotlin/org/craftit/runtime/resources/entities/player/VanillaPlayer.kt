@@ -3,31 +3,39 @@ package org.craftit.runtime.resources.entities.player
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import org.craftit.api.*
+import org.craftit.api.Server
+import org.craftit.api.Text
 import org.craftit.api.chat.ChatParticipant
 import org.craftit.api.resources.components.ComponentStore
 import org.craftit.api.resources.entities.player.Player
 import org.craftit.api.resources.entities.player.components.PlayerComponent
-import org.craftit.api.resources.entities.player.controller.VanillaPlayerController
+import org.craftit.api.resources.entities.player.controller.PlayerController
 import org.craftit.runtime.resources.entities.player.components.online_component.VanillaOnlineComponent
+import org.craftit.runtime.server.ServerScope
 import java.util.*
 
 class VanillaPlayer @AssistedInject constructor(
-    controllerFactory: VanillaPlayerController.Factory,
-    @Assisted override val server: Server,
+    playerComponentFactory: PlayerDaggerComponent.Factory,
+    override val server: Server,
     @Assisted override val uuid: UUID
 ) : Player {
     
     @AssistedFactory
+    @ServerScope
     interface Factory {
-        fun create(uuid: UUID, server: Server): VanillaPlayer
+        fun create(uuid: UUID): VanillaPlayer
     }
     
-    override val controller: VanillaPlayerController = controllerFactory.create(this)
+    override val controller: PlayerController
     
     override val components: ComponentStore<PlayerComponent> = ComponentStore()
     override val id: String
         get() = uuid.toString()
+
+    init {
+        val component = playerComponentFactory.create(this)
+        controller = component.controller()
+    } 
 
     override fun sendMessage(content: Text) {
         components[VanillaOnlineComponent::class]?.sendMessage(content)

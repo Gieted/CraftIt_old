@@ -10,6 +10,6 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.dagger:dagger:2.35.1")
-    kapt("com.google.dagger:dagger-compiler:2.35.1")
+    implementation("com.google.dagger:dagger:2.37")
+    kapt("com.google.dagger:dagger-compiler:2.37")
 }

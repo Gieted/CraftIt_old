@@ -1,30 +1,17 @@
 package org.craftit.runtime.resources.entities.player
 
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
-import org.craftit.api.Server
 import org.craftit.api.resources.entities.player.Player
 import org.craftit.api.resources.entities.player.PlayerRegistry
 import org.craftit.api.resources.entities.player.components.PlayerComponentRegistry
-import org.craftit.runtime.resources.entities.player.components.online_component.VanillaOnlineComponent
 import java.util.*
+import javax.inject.Inject
 
-class RuntimePlayerRegistry @AssistedInject constructor(
+class VanillaPlayerRegistry @Inject constructor(
     private val nativePlayerFactory: NativePlayerImpl.Factory,
     private val nativeConnectorFactory: NativeConnectorImpl.Factory,
-    private val onlineComponentFactory: VanillaOnlineComponent.Factory,
-    @Assisted server: Server,
-    playerFactoryFactory: PlayerFactory.Factory
+    private val playerFactory: PlayerFactory
 ) : PlayerRegistry {
-
-    @AssistedFactory
-    interface Factory {
-        fun create(server: Server): RuntimePlayerRegistry
-    }
-
-    private val playerFactory = playerFactoryFactory.create(server)
-
+    
     override fun get(id: String): Player? {
         TODO("Not yet implemented")
     }

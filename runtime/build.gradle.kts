@@ -16,8 +16,8 @@ dependencies {
     implementation(project(":test_plugin"))
     implementation("org.javassist:javassist:3.27.0-GA")
 
-    implementation("com.google.dagger:dagger:2.35.1")
-    kapt("com.google.dagger:dagger-compiler:2.35.1")
+    implementation("com.google.dagger:dagger:2.37")
+    kapt("com.google.dagger:dagger-compiler:2.37")
 
     implementation("com.google.code.gson:gson:2.8.6")
 

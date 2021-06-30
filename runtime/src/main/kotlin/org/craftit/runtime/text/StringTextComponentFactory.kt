@@ -6,10 +6,12 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
+@Singleton
 class StringTextComponentFactory @Inject constructor(
     sourceMap: SourceMap,
-    classLoader: ClassLoader,
+    @Named("server") classLoader: ClassLoader,
     private val styleFactory: StyleFactory
 ) {
     private val constructor: Constructor<*> by lazy {
