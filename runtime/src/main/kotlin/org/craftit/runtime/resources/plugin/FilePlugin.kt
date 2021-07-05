@@ -7,7 +7,6 @@ import dagger.assisted.AssistedInject
 import org.craftit.api.CraftIt
 import org.craftit.api.Server
 import org.craftit.api.resources.plugin.Plugin
-import org.craftit.runtime.resources.plugin.manifest.PluginManifest
 import java.io.File
 import java.net.URLClassLoader
 import java.util.zip.ZipFile

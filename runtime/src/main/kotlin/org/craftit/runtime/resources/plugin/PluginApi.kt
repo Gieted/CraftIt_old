@@ -40,7 +40,7 @@ class PluginApi @AssistedInject constructor(
         override val player = PlayerApi()
 
         inner class PlayerApi : CraftIt.Entities.Player {
-            override fun vanilla(uuid: UUID): Player = vanillaPlayerFactory.create(uuid)
+            override fun vanilla(id: String): Player = vanillaPlayerFactory.create(id)
         }
     }
 

@@ -2,17 +2,16 @@ package org.craftit.runtime.resources.packets.converters
 
 import org.craftit.api.resources.packets.SendChatMessagePacket
 import org.craftit.runtime.resources.packets.SendChatMessagePacketFactory
+import org.craftit.runtime.server.ServerScope
 import org.craftit.runtime.source_maps.SourceMap
 import java.lang.reflect.Method
 import javax.inject.Inject
-import javax.inject.Named
-import javax.inject.Singleton
 
-@Singleton
+@ServerScope
 class SendChatMessageConverter @Inject constructor(
     private val sourceMap: SourceMap,
     private val sendChatMessagePacketFactory: SendChatMessagePacketFactory,
-    @Named("server") classLoader: ClassLoader
+    classLoader: ClassLoader
 ) {
     private val getMessageMethod: Method = run {
         with(sourceMap { net.minecraft.network.play.client.CChatMessagePacket }) {

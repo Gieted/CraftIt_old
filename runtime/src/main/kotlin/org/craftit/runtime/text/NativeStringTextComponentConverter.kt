@@ -1,18 +1,17 @@
 package org.craftit.runtime.text
 
 import org.craftit.api.Text
+import org.craftit.runtime.server.ServerScope
 import org.craftit.runtime.source_maps.SourceMap
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import javax.inject.Inject
-import javax.inject.Named
-import javax.inject.Singleton
 
-@Singleton
-class StringTextComponentFactory @Inject constructor(
+@ServerScope
+class NativeStringTextComponentConverter @Inject constructor(
     sourceMap: SourceMap,
-    @Named("server") classLoader: ClassLoader,
-    private val styleFactory: StyleFactory
+    classLoader: ClassLoader,
+    private val nativeStyleFactory: NativeStyleFactory
 ) {
     private val constructor: Constructor<*> by lazy {
         with(sourceMap { net.minecraft.util.text.StringTextComponent }) {
@@ -37,12 +36,12 @@ class StringTextComponentFactory @Inject constructor(
         }
     }
 
-    fun create(text: Text): Any {
+    fun convert(text: Text): Any {
         var instance = constructor.newInstance("")
 
         for (fragment in text.fragments) {
             val spanInstance = constructor.newInstance(fragment.content)
-            setStyleMethod.invoke(spanInstance, styleFactory.create(fragment.properties))
+            setStyleMethod.invoke(spanInstance, nativeStyleFactory.create(fragment.properties))
             instance = appendMethod.invoke(instance, spanInstance)
         }
 

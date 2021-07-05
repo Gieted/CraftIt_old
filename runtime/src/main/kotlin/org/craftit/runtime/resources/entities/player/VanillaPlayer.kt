@@ -17,20 +17,17 @@ import java.util.*
 class VanillaPlayer @AssistedInject constructor(
     playerComponentFactory: PlayerDaggerComponent.Factory,
     override val server: Server,
-    @Assisted override val uuid: UUID
+    @Assisted override val id: String
 ) : Player {
     
     @AssistedFactory
-    @ServerScope
-    interface Factory {
-        fun create(uuid: UUID): VanillaPlayer
+    interface Factory: Player.Factory {
+        override fun create(id: String): VanillaPlayer
     }
     
     override val controller: PlayerController
     
     override val components: ComponentStore<PlayerComponent> = ComponentStore()
-    override val id: String
-        get() = uuid.toString()
 
     init {
         val component = playerComponentFactory.create(this)

@@ -7,20 +7,17 @@ import org.craftit.api.resources.entities.player.connector.NativeConnector
 import org.craftit.api.resources.packets.DisplayMessagePacket
 import org.craftit.api.resources.packets.Packet
 import org.craftit.runtime.resources.packets.converters.PacketConverter
-import org.craftit.runtime.server.ServerScope
 import org.craftit.runtime.source_maps.SourceMap
-import javax.inject.Named
 
 @Suppress("LocalVariableName")
 class NativeConnectorImpl @AssistedInject constructor(
     @Assisted private val playNetHandler: Any,
     private val sourceMap: SourceMap,
     private val packetConverter: PacketConverter,
-    @Named("server") private val classLoader: ClassLoader
+    private val classLoader: ClassLoader
 ) : NativeConnector {
 
     @AssistedFactory
-    @PlayerScope
     interface Factory {
         fun create(playNetHandler: Any): NativeConnectorImpl
     }

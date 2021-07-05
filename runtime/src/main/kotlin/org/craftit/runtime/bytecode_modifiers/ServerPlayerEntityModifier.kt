@@ -1,15 +1,15 @@
 package org.craftit.runtime.bytecode_modifiers
 
 import javassist.ClassPool
-import javassist.CtField
+import org.craftit.runtime.server.ServerScope
 import org.craftit.runtime.source_maps.SourceMap
 import java.security.ProtectionDomain
 import javax.inject.Inject
-import javax.inject.Named
 
 @Suppress("LocalVariableName")
+@ServerScope
 class ServerPlayerEntityModifier @Inject constructor(
-    @Named("server") private val classLoader: ClassLoader,
+    private val classLoader: ClassLoader,
     private val sourceMap: SourceMap,
     private val classPool: ClassPool,
     private val protectionDomain: ProtectionDomain
@@ -19,18 +19,16 @@ class ServerPlayerEntityModifier @Inject constructor(
         with(sourceMap { net.minecraft.entity.player.ServerPlayerEntity }) {
             val serverPlayerEntity = classPool.get(this())
 
-            val Bridge = "org.craftit.runtime.Bridge"
-            val Player = "org.craftit.api.resources.entities.player.Player"
-
-            fun addCraftItPlayerField() {
-                val craftItPlayerField = CtField.make(
-                    """$Player craftItPlayer = $Bridge.players.getOrCreate($getUUID(), this, $connection);""",
-                    serverPlayerEntity
+            fun modifyDisconnect() {
+                val disconnect = serverPlayerEntity.getDeclaredMethod(disconnect)
+                disconnect.insertAfter(
+                    """
+                    org.craftit.runtime.Bridge.onPlayerDisconnect($getUUID());
+                        """
                 )
-                serverPlayerEntity.addField(craftItPlayerField)
             }
 
-            addCraftItPlayerField()
+            modifyDisconnect()
             serverPlayerEntity.toClass(classLoader, protectionDomain)
         }
     }

@@ -2,17 +2,16 @@ package org.craftit.runtime.resources.packets.converters
 
 import org.craftit.api.resources.packets.DisplayMessagePacket
 import org.craftit.runtime.resources.entities.player.ChatType
+import org.craftit.runtime.server.ServerScope
 import org.craftit.runtime.source_maps.SourceMap
-import org.craftit.runtime.text.StringTextComponentFactory
+import org.craftit.runtime.text.NativeStringTextComponentConverter
 import javax.inject.Inject
-import javax.inject.Named
-import javax.inject.Singleton
 
-@Singleton
+@ServerScope
 class DisplayMessageConverter @Inject constructor(
     private val sourceMap: SourceMap,
-    @Named("server") private val classLoader: ClassLoader,
-    private val stringTextComponentFactory: StringTextComponentFactory,
+    private val classLoader: ClassLoader,
+    private val stringTextComponentFactory: NativeStringTextComponentConverter,
     private val chatType: ChatType
 ) {
     val constructor = run {
@@ -30,6 +29,6 @@ class DisplayMessageConverter @Inject constructor(
             else -> chatType.GAME_INFO
         }
         
-        return constructor.newInstance(stringTextComponentFactory.create(packet.message), chatType, packet.sender)
+        return constructor.newInstance(stringTextComponentFactory.convert(packet.message), chatType, packet.sender)
     }
 }

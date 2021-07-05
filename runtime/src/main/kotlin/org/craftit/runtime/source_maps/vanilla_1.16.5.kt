@@ -21,7 +21,8 @@ val vanilla1_16_5SourceMap = SourceMap.create {
         resetLastActionTime = "z",
         sendMessage = "a",
         connection = "b",
-        getUUID = Entity.getUUID!!
+        getUUID = Entity.getUUID!!,
+        disconnect = "p"
     )
 
     net.minecraft.entity.LivingEntity(
@@ -33,6 +34,8 @@ val vanilla1_16_5SourceMap = SourceMap.create {
     net.minecraft.server.management.PlayerList(
         "acu",
         broadcastMessage = "a",
+        placeNewPlayer = "a",
+        respawn = "a"
     )
 
     net.minecraft.util.text.ChatType(
@@ -100,4 +103,6 @@ val vanilla1_16_5SourceMap = SourceMap.create {
     net.minecraft.network.IPacket("oj")
 
     net.minecraft.network.play.server.SChatPacket("pb")
+
+    net.minecraft.network.NetworkManager("nd")
 }

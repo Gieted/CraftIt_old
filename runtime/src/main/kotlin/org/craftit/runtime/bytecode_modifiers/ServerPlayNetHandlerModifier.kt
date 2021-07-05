@@ -2,13 +2,14 @@ package org.craftit.runtime.bytecode_modifiers
 
 import javassist.ClassPool
 import javassist.CtMethod
+import org.craftit.runtime.server.ServerScope
 import org.craftit.runtime.source_maps.SourceMap
 import java.security.ProtectionDomain
 import javax.inject.Inject
-import javax.inject.Named
 
+@ServerScope
 class ServerPlayNetHandlerModifier @Inject constructor(
-    @Named("server") private val classLoader: ClassLoader,
+    private val classLoader: ClassLoader,
     private val sourceMap: SourceMap,
     private val classPool: ClassPool,
     private val protectionDomain: ProtectionDomain
@@ -17,6 +18,7 @@ class ServerPlayNetHandlerModifier @Inject constructor(
     override fun modify() {
         with(sourceMap { net.minecraft.network.play.ServerPlayNetHandler }) {
             val serverPlayNetHandler = classPool.get(this())
+            @Suppress("LocalVariableName") val Bridge = "org.craftit.runtime.Bridge"
 
             fun modifyHandleChat() {
                 val handleChat =
@@ -29,15 +31,28 @@ class ServerPlayNetHandlerModifier @Inject constructor(
                 handleChatCopy.name = "nativeHandleChat"
 
                 serverPlayNetHandler.addMethod(handleChatCopy)
-                
-                @Suppress("LocalVariableName") val Bridge = "org.craftit.runtime.Bridge"
 
-                handleChat.setBody(
-                    """$Bridge.connectors.get(this.$player).notify($Bridge.packetConverter.convertCChatMessage($1));"""
-                )
+                with(sourceMap { net.minecraft.entity.player.ServerPlayerEntity }) {
+                    handleChat.setBody(
+                        """$Bridge.getConnector(this.$player.$getUUID()).notify($Bridge.packetConverter.convertCChatMessage($1));"""
+                    )
+                }
+            }
+
+            fun modifyConstructor() {
+                val constructor = serverPlayNetHandler.constructors.find { it.parameterTypes.isNotEmpty() }!!
+
+                with(sourceMap { net.minecraft.entity.player.ServerPlayerEntity }) {
+                    constructor.insertAfter(
+                        """
+                    $Bridge.onServerPlayerEntityUpdate($3.$getUUID(), $3, this);
+                            """
+                    )
+                }
             }
 
             modifyHandleChat()
+            modifyConstructor()
             serverPlayNetHandler.toClass(classLoader, protectionDomain)
         }
     }

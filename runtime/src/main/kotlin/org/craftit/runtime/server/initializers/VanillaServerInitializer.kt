@@ -2,13 +2,14 @@ package org.craftit.runtime.server.initializers
 
 import org.craftit.runtime.Bridge
 import org.craftit.runtime.bytecode_modifiers.ServerBytecodeModifier
+import org.craftit.runtime.server.ServerScope
 import javax.inject.Inject
-import javax.inject.Named
 
+@ServerScope
 class VanillaServerInitializer @Inject constructor(
     bridge: Bridge,
     bytecodeModifier: ServerBytecodeModifier,
-    @Named("server") private val classLoader: ClassLoader,
+    private val classLoader: ClassLoader,
 ) : NativeServerInitializer(bridge, bytecodeModifier) {
 
     override fun startServer() {

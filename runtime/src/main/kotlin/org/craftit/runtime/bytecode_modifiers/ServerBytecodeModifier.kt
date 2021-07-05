@@ -6,12 +6,15 @@ class ServerBytecodeModifier @Inject constructor(
     private val serverPlayerEntityModifier: ServerPlayerEntityModifier,
     private val serverPlayNetHandlerModifier: ServerPlayNetHandlerModifier,
     private val commandsModifier: CommandsModifier,
-    private val propertyManagerModifier: PropertyManagerModifier
+    private val propertyManagerModifier: PropertyManagerModifier,
+    private val playerListModifier: PlayerListModifier
 ) : BytecodeModifier {
+    
     override fun modify() {
         serverPlayerEntityModifier.modify()
         serverPlayNetHandlerModifier.modify()
         commandsModifier.modify()
         propertyManagerModifier.modify()
+        playerListModifier.modify()
     }
 }

@@ -25,7 +25,7 @@ interface CraftIt {
         val player: Player
 
         interface Player {
-            fun vanilla(uuid: UUID): org.craftit.api.resources.entities.player.Player
+            fun vanilla(id: String): org.craftit.api.resources.entities.player.Player
         }
     }
 }

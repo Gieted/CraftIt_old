@@ -1,14 +1,20 @@
 package org.craftit.api.resources.entities.player
 
-import org.craftit.api.resources.entities.player.components.PlayerComponentRegistry
-import java.util.*
+import org.craftit.api.resources.entities.PlayerPrototype
+import org.craftit.api.resources.entities.player.components.PlayerComponentsRegistry
 
 interface PlayerRegistry {
+    var prototype: PlayerPrototype
+    
     operator fun get(id: String): Player?
     
-    fun getByUUID(uuid: UUID): Player?
+    fun create(id: String): Player
+
+    fun getOrCreate(id: String) = get(id) ?: create(id)
     
-    fun create(uuid: UUID): Player
+    val components: PlayerComponentsRegistry
     
-    val components: PlayerComponentRegistry
+    val online: OnlinePlayerRegistry
+    
+    var factory: Player.Factory
 }

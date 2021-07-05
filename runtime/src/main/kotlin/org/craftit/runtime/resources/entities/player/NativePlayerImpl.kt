@@ -5,19 +5,14 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import org.craftit.api.resources.entities.player.connector.NativeConnector
 import org.craftit.api.resources.entities.player.NativePlayer
-import org.craftit.runtime.server.ServerScope
 import org.craftit.runtime.source_maps.SourceMap
-import org.craftit.runtime.text.StringTextComponentFactory
 import java.lang.reflect.Method
 import java.util.*
 
 class NativePlayerImpl @AssistedInject constructor(
     @Assisted private val serverPlayerEntity: Any,
     @Assisted override val connector: NativeConnector,
-    sourceMap: SourceMap,
-    private val stringTextComponentFactory: StringTextComponentFactory,
-//    private val chatType: ChatType,
-//    private val nativeConnectorCache: NativeConnectorCache
+    sourceMap: SourceMap
 ) : NativePlayer {
     
     @AssistedFactory

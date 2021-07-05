@@ -49,7 +49,8 @@ tasks.register<GenerateSourceMap>("generateSourceMap") {
                 "resetLastActionTime",
                 "sendMessage",
                 "connection",
-                "getUUID"
+                "getUUID",
+                "disconnect"
             ),
 
             "net.minecraft.entity.LivingEntity" to listOf(
@@ -58,7 +59,9 @@ tasks.register<GenerateSourceMap>("generateSourceMap") {
             ),
 
             "net.minecraft.server.management.PlayerList" to listOf(
-                "broadcastMessage"
+                "broadcastMessage",
+                "placeNewPlayer",
+                "respawn"
             ),
 
             "net.minecraft.util.text.ChatType" to listOf(
@@ -117,6 +120,8 @@ tasks.register<GenerateSourceMap>("generateSourceMap") {
             "net.minecraft.network.IPacket" to listOf(),
 
             "net.minecraft.network.play.server.SChatPacket" to listOf(),
+            
+            "net.minecraft.network.NetworkManager" to listOf()
         )
     )
 }

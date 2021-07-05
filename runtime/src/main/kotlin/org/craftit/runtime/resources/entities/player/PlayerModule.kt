@@ -3,11 +3,12 @@ package org.craftit.runtime.resources.entities.player
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import org.craftit.api.resources.entities.player.components.PlayerComponentsRegistry
 import org.craftit.api.resources.entities.player.connector.packet_handler.PacketHandler
 import org.craftit.api.resources.entities.player.controller.PlayerController
 import org.craftit.api.resources.entities.player.input_resolver.InputResolver
-import org.craftit.api.resources.entities.player.input_resolver.VanillaInputResolver
 import org.craftit.api.resources.entities.player.presenter.Presenter
+import org.craftit.runtime.resources.entities.player.components.VanillaPlayerComponentsRegistry
 import org.craftit.runtime.resources.entities.player.components.online_component.VanillaPacketHandler
 import javax.inject.Singleton
 

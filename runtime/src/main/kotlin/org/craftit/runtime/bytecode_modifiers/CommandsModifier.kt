@@ -1,14 +1,15 @@
 package org.craftit.runtime.bytecode_modifiers
 
 import javassist.ClassPool
+import org.craftit.runtime.server.ServerScope
 import org.craftit.runtime.source_maps.SourceMap
 import java.security.ProtectionDomain
 import javax.inject.Inject
-import javax.inject.Named
 
 @Suppress("LocalVariableName")
+@ServerScope
 class CommandsModifier @Inject constructor(
-    @Named("server") private val classLoader: ClassLoader,
+    private val classLoader: ClassLoader,
     private val sourceMap: SourceMap,
     private val classPool: ClassPool,
     private val protectionDomain: ProtectionDomain
@@ -24,15 +25,19 @@ class CommandsModifier @Inject constructor(
                             && it.parameterTypes.size == 4
                             && it.parameterTypes[3] == classPool.get("java.util.Map")
                 }!!
+                
+                val Bridge = "org.craftit.runtime.Bridge"
 
                 val ServerPlayerEntity = sourceMap { net.minecraft.entity.player.ServerPlayerEntity }()
                 with(sourceMap { net.minecraft.command.CommandSource }) {
-                    fillUsableCommands.setBody(
-                        """{
-                        org.craftit.api.resources.entities.player.Player player = (($ServerPlayerEntity) $3.$getEntity()).craftItPlayer;
-                        org.craftit.runtime.Bridge.rootNodeFiller.fillRootNote($2, player);
+                    with(sourceMap { net.minecraft.entity.player.ServerPlayerEntity }) {
+                        fillUsableCommands.setBody(
+                            """{
+                        org.craftit.api.resources.entities.player.Player player = $Bridge.getPlayer((($ServerPlayerEntity) $3.$getEntity()).$getUUID());
+                        $Bridge.rootNodeFiller.fillRootNote($2, player);
                         }"""
-                    )
+                        )
+                    }
                 }
             }
 

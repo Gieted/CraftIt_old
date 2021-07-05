@@ -48,12 +48,6 @@ abstract class MainModule {
         @Singleton
         @Named("serverDirectory")
         fun serverDirectory(): File = File("")
-
-        @Provides
-        @Named("server")
-        @Singleton
-        fun classLoader(configuration: Configuration): ClassLoader =
-            URLClassLoader(arrayOf(configuration.serverFile.toURI().toURL()))
     }
     
     @Binds
