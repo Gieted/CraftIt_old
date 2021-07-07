@@ -10,7 +10,7 @@ import java.lang.reflect.Method
 import java.util.*
 
 class NativePlayerImpl @AssistedInject constructor(
-    @Assisted private val serverPlayerEntity: Any,
+    @Assisted var serverPlayerEntity: Any,
     @Assisted override val connector: NativeConnector,
     sourceMap: SourceMap
 ) : NativePlayer {

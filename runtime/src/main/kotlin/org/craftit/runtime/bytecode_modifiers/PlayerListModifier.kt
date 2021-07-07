@@ -30,14 +30,17 @@ class PlayerListModifier @Inject constructor(
 
                 playerList.addMethod(nativeRespawn)
 
-                val ServerPlayerEntity = this()
                 val Bridge = "org.craftit.runtime.Bridge"
 
                 with(sourceMap { net.minecraft.entity.player.ServerPlayerEntity }) {
+                    val ServerPlayerEntity = this()
+                    
                     respawn.setBody(
                         """{
                 $ServerPlayerEntity player = nativeRespawn($1, $2);
                 $Bridge.onServerPlayerEntityUpdate(player.$getUUID(), player, player.$connection);
+                
+                return player;
                         }"""
                     )
                 }

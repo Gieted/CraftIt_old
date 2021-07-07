@@ -31,12 +31,19 @@ class Bridge @Inject constructor(
 
     private fun onServerPlayerEntityUpdateM(uuid: UUID, serverPlayerEntity: Any, playNetHandler: Any) {
         val player = server.entities.players.getOrCreate(uuid.toString())
-        
-        val nativeConnector = nativeConnectorFactory.create(playNetHandler)
-        val nativePlayer = nativePlayerFactory.create(serverPlayerEntity, nativeConnector)
 
-        player.components.attach(server.entities.players.components.onlineComponent.create(player, nativePlayer))
-        player.components.attach(runtimePlayerComponentFactory.create(nativeConnector))
+        if (RuntimePlayerComponent::class in player.components) {
+            player.components.require(RuntimePlayerComponent::class).nativePlayer.serverPlayerEntity = serverPlayerEntity
+            println("spe updated!")
+        } else {
+            val nativeConnector = nativeConnectorFactory.create(playNetHandler)
+            val nativePlayer = nativePlayerFactory.create(serverPlayerEntity, nativeConnector)
+
+            player.components.attach(server.entities.players.components.onlineComponent.create(player, nativePlayer))
+            player.components.attach(runtimePlayerComponentFactory.create(nativeConnector, nativePlayer))
+
+            println("spe created!")
+        }
     }
 
     private fun onPlayerDisconnectM(uuid: UUID) {

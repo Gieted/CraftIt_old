@@ -4,6 +4,7 @@ import org.craftit.api.resources.commands.QuickCommand
 import org.craftit.api.resources.entities.HealthHolder
 
 class Heal(override val id: String) : QuickCommand() {
+    
     override fun Command.define() {
         val targets by entitiesArgument(optional = issuer is HealthHolder)
         val amount by intArgument(min = 1)
