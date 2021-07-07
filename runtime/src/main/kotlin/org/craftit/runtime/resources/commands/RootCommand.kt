@@ -8,14 +8,12 @@ import org.craftit.api.resources.entities.player.Player
 import javax.inject.Inject
 
 class RootCommand @Inject constructor() : Command {
-    override val id: String = "craftit:root"
+    override val id: String
+        get() = "craftit:root"
 
     override fun getDefinition(issuer: CommandIssuer): CommandDefinition =
-        CommandDefinition((issuer as Player).server.commands.flatMap { command ->
-            val commandOption = OptionParameter(command.id)
-            command.getDefinition(issuer).variants.map {
-                commandOption + it
-            }
+        CommandDefinition((issuer as Player).server.commands.map { command ->
+            OptionParameter(command.id, command.getDefinition(issuer).rootParameters, optional = false)
         })
 
     override fun execute(issuer: CommandIssuer, arguments: String) {
@@ -25,7 +23,7 @@ class RootCommand @Inject constructor() : Command {
         if (id.isEmpty()) {
             return
         }
-            
+
         val command = (issuer as Player).server.commands[id]
         if (command == null) {
             issuer.sendErrorMessage("Cannot find command: $id")
@@ -41,4 +39,7 @@ class RootCommand @Inject constructor() : Command {
 
         return command?.getSuggestions(issuer, args) ?: TODO()
     }
+
+    override val state: Any
+        get() = Any()
 }

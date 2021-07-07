@@ -8,8 +8,8 @@ import org.craftit.test_plugin.commands.HelloWorld
 
 class TestPlugin(craftIt: CraftIt) : Plugin by craftIt.plugin(
     commands = {
-        "hello_world" { HelloWorld(it) }
-        "heal" { Heal(it) }
-        "counter" { Counter(it) }
+        "hello_world" { HelloWorld(it, craftIt) }
+        "heal" { Heal(it, craftIt) }
+        "counter" { Counter(it, craftIt) }
     }
 )

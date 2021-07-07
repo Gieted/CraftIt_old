@@ -1,23 +1,27 @@
 package org.craftit.test_plugin.commands
 
-import org.craftit.api.resources.commands.QuickCommand
+import org.craftit.api.CraftIt
+import org.craftit.api.resources.commands.Command
 
-class Counter(override val id: String) : QuickCommand() {
-    private var count: Int = 0
+class Counter(
+    override val id: String,
+    craftIt: CraftIt,
+    override val state: State = State()
+) : Command by craftIt.command({
     
-    override fun Command.define() {
-        option("add") {
-            execute { 
-                count++
-                issuer.sendMessage(count.toString())
-            }
-        }
-        
-        option("subtract") {
-            execute { 
-                count--
-                issuer.sendMessage(count.toString())
-            }
+    option("add") {
+        execute {
+            state.count++
+            issuer.sendMessage(state.count.toString())
         }
     }
+
+    option("subtract") {
+        execute {
+            state.count--
+            issuer.sendMessage(state.count.toString())
+        }
+    }
+}) {
+    data class State(var count: Int = 0)
 }

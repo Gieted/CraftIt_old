@@ -16,4 +16,6 @@ interface Command : Resource {
     data class Suggestions(val replaceRange: IntRange, val list: List<String>, val tooltip: Text?)
 
     fun getSuggestions(issuer: CommandIssuer, currentArguments: String): Suggestions
+    
+    val state: Any
 }

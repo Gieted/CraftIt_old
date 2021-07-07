@@ -27,7 +27,7 @@ class EntityArgumentWrapper @Inject constructor(
         }
     }
 
-    fun entity(): ArgumentType<Any> = entityMethod.invoke(null) as ArgumentType<Any>
+    fun <T> entity(): ArgumentType<T> = entityMethod.invoke(null) as ArgumentType<T>
 
-    fun entities(): ArgumentType<Any> = entitiesMethod.invoke(null) as ArgumentType<Any>
+    fun <T> entities(): ArgumentType<T> = entitiesMethod.invoke(null) as ArgumentType<T>
 }
