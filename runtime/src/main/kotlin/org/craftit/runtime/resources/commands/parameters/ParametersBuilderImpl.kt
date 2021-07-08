@@ -8,15 +8,17 @@ import javax.inject.Inject
 
 class ParametersBuilderImpl private constructor(
     private val scopeParameter: MutableParameter?,
-    private val parameterConverter: ParameterConverter
+    rootParameters: List<MutableParameter>? = null,
+    private val parameterConverter: ParameterConverter,
 ) : ParametersBuilder {
 
     @Inject
-    constructor(parameterConverter: ParameterConverter) : this(null, parameterConverter)
+    constructor(parameterConverter: ParameterConverter) : this(null, null, parameterConverter)
 
     private abstract class MutableParameter : Parameter, ParametersBuilder.ParameterRef {
-        private val mutableChildren = mutableListOf<Parameter>()
-        override val children: List<Parameter> = mutableChildren
+        private val mutableChildren = mutableListOf<MutableParameter>()
+        val refs = mutableListOf<List<MutableParameter>>()
+        override val children: List<MutableParameter> = mutableChildren + refs.flatten()
 
         fun addChild(parameter: MutableParameter) {
             mutableChildren.add(parameter)
@@ -52,6 +54,7 @@ class ParametersBuilderImpl private constructor(
     }
 
     private val parameters = mutableListOf<MutableParameter>()
+    private val rootParameters = rootParameters ?: parameters
 
     override fun int(
         name: String,
@@ -59,12 +62,14 @@ class ParametersBuilderImpl private constructor(
         min: Int,
         max: Int,
         children: ParametersBuilder.(ParametersBuilder.ParameterRef) -> Unit
-    ) {
+    ): ParametersBuilder.ParameterRef {
         val parameter = IntParameterImpl(name, optional, min, max)
-        val parameterBuilder = ParametersBuilderImpl(parameter, parameterConverter)
+        val parameterBuilder = ParametersBuilderImpl(parameter, rootParameters, parameterConverter)
         parameterBuilder.children(parameter)
         parameterBuilder.parameters.forEach { parameter.addChild(it) }
         parameters.add(parameter)
+
+        return parameter
     }
 
     override fun entity(
@@ -73,29 +78,36 @@ class ParametersBuilderImpl private constructor(
         multiple: Boolean,
         playerOnly: Boolean,
         children: ParametersBuilder.(ParametersBuilder.ParameterRef) -> Unit
-    ) {
+    ): ParametersBuilder.ParameterRef {
         val parameter = EntityParameterImpl(name, optional, multiple, playerOnly)
-        val parameterBuilder = ParametersBuilderImpl(parameter, parameterConverter)
+        val parameterBuilder = ParametersBuilderImpl(parameter, rootParameters, parameterConverter)
         parameterBuilder.children(parameter)
         parameterBuilder.parameters.forEach { parameter.addChild(it) }
         parameters.add(parameter)
+
+        return parameter
     }
 
     override fun option(
         name: String,
         optional: Boolean,
         children: ParametersBuilder.(ParametersBuilder.ParameterRef) -> Unit
-    ) {
+    ): ParametersBuilder.ParameterRef {
         val parameter = OptionParameterImpl(name, optional)
-        val parameterBuilder = ParametersBuilderImpl(parameter, parameterConverter)
+        val parameterBuilder = ParametersBuilderImpl(parameter, rootParameters, parameterConverter)
         parameterBuilder.children(parameter)
         parameterBuilder.parameters.forEach { parameter.addChild(it) }
         parameters.add(parameter)
+
+        return parameter
     }
 
-    private operator fun List<Parameter>.invoke(refCache: MutableMap<Parameter, ParametersBuilder.ParameterRef>) {
-        forEach { 
-            it(refCache)
+    private fun ParametersBuilder.parameters(
+        refCache: MutableMap<Parameter, ParametersBuilder.ParameterRef>,
+        parameters: List<Parameter>
+    ) {
+        parameters.forEach {
+            parameter(refCache, it)
         }
     }
 
@@ -103,19 +115,22 @@ class ParametersBuilderImpl private constructor(
     override fun List<Parameter>.invoke() {
         val refCache = mutableMapOf<Parameter, ParametersBuilder.ParameterRef>()
 
-        this(refCache)
+        parameters(refCache, this)
     }
 
-    private operator fun Parameter.invoke(refCache: MutableMap<Parameter, ParametersBuilder.ParameterRef>) {
-        refCache[this]?.invoke() ?: when (val parameter = this) {
+    private fun ParametersBuilder.parameter(
+        refCache: MutableMap<Parameter, ParametersBuilder.ParameterRef>,
+        parameter: Parameter
+    ) {
+        refCache[parameter]?.invoke() ?: when (parameter) {
             is IntParameter -> int(
                 parameter.name,
                 parameter.optional,
                 parameter.min,
                 parameter.max
             ) {
-                refCache[this@invoke] = it
-                parameter.children(refCache)
+                refCache[parameter] = it
+                parameters(refCache, parameter.children)
             }
             is EntityParameter -> entity(
                 parameter.name,
@@ -123,12 +138,12 @@ class ParametersBuilderImpl private constructor(
                 parameter.multiple,
                 parameter.playerOnly
             ) {
-                refCache[this@invoke] = it
-                parameter.children(refCache)
+                refCache[parameter] = it
+                parameters(refCache, parameter.children)
             }
             is OptionParameter -> option(parameter.name, parameter.optional) {
-                refCache[this@invoke] = it
-                parameter.children(refCache)
+                refCache[parameter] = it
+                parameters(refCache, parameter.children)
             }
             else -> throw AssertionError()
         }
@@ -137,11 +152,20 @@ class ParametersBuilderImpl private constructor(
     override operator fun Parameter.invoke() {
         val refCache = mutableMapOf<Parameter, ParametersBuilder.ParameterRef>()
 
-        this(refCache)
+        parameter(refCache, this)
     }
 
     override fun ParametersBuilder.ParameterRef.invoke() {
         scopeParameter!!.addChild(this as MutableParameter)
+    }
+
+    override fun ParametersBuilder.ParameterRef.children() {
+        scopeParameter!!.refs.add((this as MutableParameter).children)
+    }
+
+
+    override fun root() {
+        scopeParameter!!.refs.add(rootParameters)
     }
 
     operator fun invoke(configure: ParametersBuilder.() -> Unit): List<Parameter> {

@@ -6,22 +6,25 @@ import org.craftit.api.resources.commands.CommandIssuer
 import org.craftit.api.resources.entities.player.Player
 import org.craftit.runtime.resources.commands.parameters.ParametersBuilderImpl
 import javax.inject.Inject
+import javax.inject.Provider
 
-class RootCommand @Inject constructor(private val parametersBuilder: ParametersBuilderImpl) : Command {
-    
+class RootCommand @Inject constructor(private val parametersBuilderProvider: Provider<ParametersBuilderImpl>) :
+    Command {
+
     override val id: String
         get() = "craftit:root"
 
     override val state: Any
         get() = Any()
 
-    override fun getDefinition(issuer: CommandIssuer): CommandDefinition = CommandDefinition(parametersBuilder {
-        (issuer as Player).server.commands.forEach { command ->
-            option(command.id) {
-                command.getDefinition(issuer).rootParameters()
+    override fun getDefinition(issuer: CommandIssuer): CommandDefinition =
+        CommandDefinition((parametersBuilderProvider.get()) {
+            (issuer as Player).server.commands.forEach { command ->
+                option(command.id) {
+                    command.getDefinition(issuer).rootParameters()
+                }
             }
-        }
-    })
+        })
 
     override fun execute(issuer: CommandIssuer, arguments: String) {
         val id = arguments.split(' ').first()
