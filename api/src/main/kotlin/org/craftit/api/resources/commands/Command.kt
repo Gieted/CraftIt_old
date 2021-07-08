@@ -18,4 +18,5 @@ interface Command : Resource {
     fun getSuggestions(issuer: CommandIssuer, currentArguments: String): Suggestions
     
     val state: Any
+      get() = Any()
 }

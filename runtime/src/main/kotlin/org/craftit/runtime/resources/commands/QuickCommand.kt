@@ -18,6 +18,12 @@ class QuickCommand @AssistedInject constructor(
     interface Factory {
         fun create(configure: CommandBuilder.() -> Unit): QuickCommand
     }
+
+    override val id: String
+        get() = "craftit:command"
+
+    override val state: Any
+        get() = Any()
     
     override fun getDefinition(issuer: CommandIssuer): CommandDefinition {
         val commandBuilder = commandBuilderFactory.create(issuer)
@@ -27,16 +33,11 @@ class QuickCommand @AssistedInject constructor(
     }
 
     override fun execute(issuer: CommandIssuer, arguments: String) {
-        TODO("Not yet implemented")
+        val commandBuilder = commandBuilderFactory.create(issuer)
+        commandBuilder.configure()
     }
 
     override fun getSuggestions(issuer: CommandIssuer, currentArguments: String): Command.Suggestions {
         TODO("Not yet implemented")
     }
-
-    override val state: Any
-        get() = Any()
-
-    override val id: String
-        get() = "craftit:command"
 }

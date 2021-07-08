@@ -3,18 +3,25 @@ package org.craftit.runtime.resources.commands
 import org.craftit.api.resources.commands.Command
 import org.craftit.api.resources.commands.CommandDefinition
 import org.craftit.api.resources.commands.CommandIssuer
-import org.craftit.api.resources.commands.parameters.OptionParameter
 import org.craftit.api.resources.entities.player.Player
+import org.craftit.runtime.resources.commands.parameters.ParametersBuilderImpl
 import javax.inject.Inject
 
-class RootCommand @Inject constructor() : Command {
+class RootCommand @Inject constructor(private val parametersBuilder: ParametersBuilderImpl) : Command {
+    
     override val id: String
         get() = "craftit:root"
 
-    override fun getDefinition(issuer: CommandIssuer): CommandDefinition =
-        CommandDefinition((issuer as Player).server.commands.map { command ->
-            OptionParameter(command.id, command.getDefinition(issuer).rootParameters, optional = false)
-        })
+    override val state: Any
+        get() = Any()
+
+    override fun getDefinition(issuer: CommandIssuer): CommandDefinition = CommandDefinition(parametersBuilder {
+        (issuer as Player).server.commands.forEach { command ->
+            option(command.id) {
+                command.getDefinition(issuer).rootParameters()
+            }
+        }
+    })
 
     override fun execute(issuer: CommandIssuer, arguments: String) {
         val id = arguments.split(' ').first()
@@ -26,7 +33,7 @@ class RootCommand @Inject constructor() : Command {
 
         val command = (issuer as Player).server.commands[id]
         if (command == null) {
-            issuer.sendErrorMessage("Cannot find command: $id")
+            issuer.sendErrorMessage("No such command: $id")
         } else {
             command.execute(issuer, args)
         }
@@ -39,7 +46,4 @@ class RootCommand @Inject constructor() : Command {
 
         return command?.getSuggestions(issuer, args) ?: TODO()
     }
-
-    override val state: Any
-        get() = Any()
 }

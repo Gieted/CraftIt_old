@@ -1,16 +1,11 @@
 package org.craftit.api
 
-import com.mojang.brigadier.tree.ArgumentCommandNode
-import com.mojang.brigadier.tree.CommandNode
-import com.mojang.brigadier.tree.LiteralCommandNode
 import org.craftit.api.resources.IdGenerator
-import org.craftit.api.resources.plugin.Plugin
 import org.craftit.api.resources.commands.Command
 import org.craftit.api.resources.commands.CommandBuilder
-import org.craftit.api.resources.commands.parameters.EntityParameter
-import org.craftit.api.resources.commands.parameters.NumericParameter
-import org.craftit.api.resources.commands.parameters.OptionParameter
-import java.util.*
+import org.craftit.api.resources.commands.parameters.Parameter
+import org.craftit.api.resources.commands.parameters.ParametersBuilder
+import org.craftit.api.resources.plugin.Plugin
 
 interface CraftIt {
     val commands: Commands
@@ -37,10 +32,6 @@ interface CraftIt {
     }
 
     fun command(configure: CommandBuilder.() -> Unit): Command
-
-    fun <T, Y> EntityParameter.toBrigadierCommandNode(): ArgumentCommandNode<T, Y>
-
-    fun <T> NumericParameter<Int>.toBrigadierCommandNode(): ArgumentCommandNode<T, Int>
-
-    fun <T> OptionParameter.toBrigadierCommandNode(): LiteralCommandNode<T>
+    
+    fun parameters(configure: ParametersBuilder.() -> Unit): List<Parameter>
 }

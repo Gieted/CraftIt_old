@@ -7,38 +7,31 @@ import com.mojang.brigadier.tree.ArgumentCommandNode
 import com.mojang.brigadier.tree.CommandNode
 import com.mojang.brigadier.tree.LiteralCommandNode
 import org.craftit.api.resources.commands.parameters.EntityParameter
-import org.craftit.api.resources.commands.parameters.NumericParameter
+import org.craftit.api.resources.commands.parameters.IntParameter
 import org.craftit.api.resources.commands.parameters.OptionParameter
 import org.craftit.api.resources.commands.parameters.Parameter
 import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")
 class ParameterConverter @Inject constructor(private val entityArgumentWrapper: EntityArgumentWrapper) {
-
-    fun <T> Parameter.toBrigadierCommandNode(): CommandNode<T> = (when {
-        this is NumericParameter<*> && this.type == Int::class -> (this as NumericParameter<Int>).toBrigadierCommandNode<Any>()
-        this is EntityParameter -> this.toBrigadierCommandNode<Any, Any>()
-        this is OptionParameter -> this.toBrigadierCommandNode<Any>()
-        else -> throw AssertionError()
-    } as CommandNode<T>)
     
-    fun <T, Y> EntityParameter.toBrigadierCommandNode(): ArgumentCommandNode<T, Y> =
-        RequiredArgumentBuilder.argument<T, Y>(
-            this.name,
-            if (this.multiple) entityArgumentWrapper.entities() else entityArgumentWrapper.entity()
+    fun <T> convertEntityParameter(parameter: EntityParameter): ArgumentCommandNode<T, Any> =
+        RequiredArgumentBuilder.argument<T, Any>(
+            parameter.name,
+            if (parameter.multiple) entityArgumentWrapper.entities() else entityArgumentWrapper.entity()
         ).build().also { commandNode ->
-            this.children.forEach { commandNode.addChild(it.toBrigadierCommandNode()) }
+            parameter.children.forEach { commandNode.addChild(it.toBrigadierCommandNode()) }
         }
 
-    fun <T> NumericParameter<Int>.toBrigadierCommandNode(): ArgumentCommandNode<T, Int> =
+    fun <T> convertIntParameter(parameter: IntParameter): ArgumentCommandNode<T, Int> =
         RequiredArgumentBuilder.argument<T, Int>(
-            this.name, IntegerArgumentType.integer(this.min as Int, this.max as Int)
+            parameter.name, IntegerArgumentType.integer(parameter.min, parameter.max)
         ).build().also { commandNode ->
-            this.children.forEach { commandNode.addChild(it.toBrigadierCommandNode()) }
+            parameter.children.forEach { commandNode.addChild(it.toBrigadierCommandNode()) }
         }
 
-    fun <T> OptionParameter.toBrigadierCommandNode(): LiteralCommandNode<T> =
-        LiteralArgumentBuilder.literal<T>(this.name).build().also { commandNode ->
-            this.children.forEach { commandNode.addChild(it.toBrigadierCommandNode()) }
+    fun <T> convertOptionParameter(parameter: OptionParameter): LiteralCommandNode<T> =
+        LiteralArgumentBuilder.literal<T>(parameter.name).build().also { commandNode ->
+            parameter.children.forEach { commandNode.addChild(it.toBrigadierCommandNode()) }
         }
 }

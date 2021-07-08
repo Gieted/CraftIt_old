@@ -1,10 +1,5 @@
 package org.craftit.runtime.resources.plugin
 
-import com.mojang.brigadier.arguments.IntegerArgumentType
-import com.mojang.brigadier.builder.LiteralArgumentBuilder
-import com.mojang.brigadier.builder.RequiredArgumentBuilder
-import com.mojang.brigadier.tree.ArgumentCommandNode
-import com.mojang.brigadier.tree.LiteralCommandNode
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -13,15 +8,14 @@ import org.craftit.api.Server
 import org.craftit.api.resources.IdGenerator
 import org.craftit.api.resources.commands.Command
 import org.craftit.api.resources.commands.CommandBuilder
-import org.craftit.api.resources.commands.parameters.EntityParameter
-import org.craftit.api.resources.commands.parameters.NumericParameter
-import org.craftit.api.resources.commands.parameters.OptionParameter
+import org.craftit.api.resources.commands.parameters.Parameter
+import org.craftit.api.resources.commands.parameters.ParametersBuilder
 import org.craftit.api.resources.entities.player.Player
 import org.craftit.api.resources.plugin.Plugin
-import org.craftit.runtime.resources.commands.EntityArgumentWrapper
-import org.craftit.runtime.resources.commands.ParameterConverter
 import org.craftit.runtime.resources.commands.QuickCommand
+import org.craftit.runtime.resources.commands.parameters.ParametersBuilderImpl
 import org.craftit.runtime.resources.entities.player.VanillaPlayer
+import javax.inject.Provider
 
 class PluginApi @AssistedInject constructor(
     @Assisted private val server: Server,
@@ -30,7 +24,7 @@ class PluginApi @AssistedInject constructor(
     private val vanillaPlayerFactory: VanillaPlayer.Factory,
     private val quickPluginFactory: QuickPlugin.Factory,
     private val quickCommandFactory: QuickCommand.Factory,
-    private val parameterConverter: ParameterConverter
+    private val parametersBuilderProvider: Provider<ParametersBuilderImpl>
 ) : CraftIt {
 
     @AssistedFactory
@@ -61,13 +55,11 @@ class PluginApi @AssistedInject constructor(
         quickPluginFactory.create(this, commands, pluginId)
 
     override fun command(configure: CommandBuilder.() -> Unit): Command = quickCommandFactory.create(configure)
-
-    override fun <T, Y> EntityParameter.toBrigadierCommandNode(): ArgumentCommandNode<T, Y> =
-        with(parameterConverter) { this@toBrigadierCommandNode.toBrigadierCommandNode() }
-
-    override fun <T> NumericParameter<Int>.toBrigadierCommandNode(): ArgumentCommandNode<T, Int> =
-        with(parameterConverter) { this@toBrigadierCommandNode.toBrigadierCommandNode() }
-
-    override fun <T> OptionParameter.toBrigadierCommandNode(): LiteralCommandNode<T> =
-        with(parameterConverter) { this@toBrigadierCommandNode.toBrigadierCommandNode() }
+    
+    override fun parameters(configure: ParametersBuilder.() -> Unit): List<Parameter> {
+        val parameterBuilder =  parametersBuilderProvider.get()
+        parameterBuilder.configure()
+        
+        return parameterBuilder.build()
+    }
 }

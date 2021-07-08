@@ -6,18 +6,17 @@ import dagger.assisted.AssistedInject
 import org.craftit.api.resources.commands.CommandBuilder
 import org.craftit.api.resources.commands.CommandDefinition
 import org.craftit.api.resources.commands.CommandIssuer
-import org.craftit.api.resources.commands.parameters.EntityParameter
-import org.craftit.api.resources.commands.parameters.NumericParameter
-import org.craftit.api.resources.commands.parameters.OptionParameter
-import org.craftit.api.resources.commands.parameters.Parameter
+import org.craftit.api.resources.commands.parameters.ParametersBuilder
 import org.craftit.api.resources.entities.Entity
-import kotlin.reflect.KClass
+import org.craftit.runtime.resources.commands.parameters.ParametersBuilderImpl
+import javax.inject.Provider
 import kotlin.reflect.KProperty
 
 @Suppress("UNCHECKED_CAST")
 class CommandBuilderImpl @AssistedInject constructor(
     @Assisted override val issuer: CommandIssuer,
-    private val commandBuilderFactory: Factory
+    private val commandBuilderFactory: Factory,
+    private val parameterBuilderProvider: Provider<ParametersBuilderImpl>
 ) : CommandBuilder {
 
     @AssistedFactory
@@ -25,91 +24,80 @@ class CommandBuilderImpl @AssistedInject constructor(
         fun create(issuer: CommandIssuer): CommandBuilderImpl
     }
 
-    private class ArgumentImpl<T> : CommandBuilder.Argument<T> {
+    private abstract inner class Argument<T> : CommandBuilder.Argument<T> {
+        abstract val name: String
+        abstract val optional: Boolean
+        val children = mutableListOf<Argument<*>>()
+        var parent: Argument<*>? = null
+            private set
+
         override operator fun getValue(thisRef: Any?, prop: KProperty<*>): T {
             return TODO()
         }
-    }
 
-    private data class MutableCommandDefinition(val rootParameters: MutableList<MutableParameter> = mutableListOf()) {
-        fun toCommandDefinition() = CommandDefinition(rootParameters.map { it.toParameter() })
-    }
-
-    private val parameterCache = mutableMapOf<MutableParameter, Parameter>()
-
-    private interface MutableParameter {
-        val name: String
-        val children: MutableList<MutableParameter>
-        var parent: MutableParameter?
-        val optional: Boolean
-
-        fun addChild(child: MutableParameter) {
-            children.add(child)
-            child.parent = this
+        fun addChild(argument: Argument<*>) {
+            children.add(argument)
+            argument.parent = this
         }
 
-        fun toParameter(): Parameter
+        abstract fun ParametersBuilder.parameter()
     }
 
-
-    private inner class MutableEntityParameter(
+    private inner class IntArgument<T : Int?>(
         override val name: String,
-        override val children: MutableList<MutableParameter> = mutableListOf(),
-        override var parent: MutableParameter? = null,
         override val optional: Boolean,
-        val multiple: Boolean,
+        val min: Int,
+        val max: Int
+    ) : Argument<T>() {
+        override fun ParametersBuilder.parameter() {
+            int(name, optional, min, max) { 
+                children.forEach { it.apply { parameter() } }
+            }
+        }
+    }
+
+    private inner class EntitiesArgument<T : Set<Entity>?>(
+        override val name: String,
+        override val optional: Boolean,
         val playerOnly: Boolean,
-    ) : MutableParameter {
-        override fun toParameter() = parameterCache.getOrPut(this) {
-            EntityParameter(
-                name,
-                children.map { it.toParameter() },
-                optional,
-                multiple,
-                playerOnly
-            )
+    ) : Argument<T>() {
+        override fun ParametersBuilder.parameter() {
+            entity(name, optional, true, playerOnly) {
+                children.forEach { it.apply { parameter() } }
+            }
         }
     }
 
-    private inner class MutableNumericParameter<T : Comparable<T>>(
+    private inner class OptionArgument(
         override val name: String,
-        override val children: MutableList<MutableParameter> = mutableListOf(),
-        override var parent: MutableParameter? = null,
         override val optional: Boolean,
-        val min: T?,
-        val max: T?,
-        val type: KClass<T>,
-    ) : MutableParameter {
-        override fun toParameter() = parameterCache.getOrPut(this) {
-            NumericParameter(name, children.map { it.toParameter() }, optional, min, max, type)
+    ) : Argument<String>() {
+        override fun ParametersBuilder.parameter() {
+            option(name, optional) {
+                children.forEach { it.apply { parameter() } }
+            }
         }
     }
 
-    private inner class MutableOptionParameter(
-        override val name: String,
-        override val children: MutableList<MutableParameter> = mutableListOf(),
-        override var parent: MutableParameter? = null,
-        override val optional: Boolean,
-    ) : MutableParameter {
-        override fun toParameter() = parameterCache.getOrPut(this) {
-            OptionParameter(name, children.map { it.toParameter() }, optional)
-        }
-    }
+    private var lastArgument: Argument<*>? = null
+    private val rootArguments = mutableListOf<Argument<*>>()
 
-    private val mutableDefinition = MutableCommandDefinition()
-    private var lastParameter: MutableParameter? = null
+    private val executors = mutableMapOf<Argument<*>, () -> Unit>()
+    private var rootExecutor: (() -> Unit)? = null
 
     val definition: CommandDefinition
-        get() = mutableDefinition.toCommandDefinition()
+        get() = CommandDefinition((parameterBuilderProvider.get()){
+            rootArguments.forEach { it.apply { parameter() } }
+        })
 
-    private fun addParameter(parameter: MutableParameter) {
-        val lastParameter = lastParameter
-        if (lastParameter == null) {
-            mutableDefinition.rootParameters.add(parameter)
-            this.lastParameter = parameter
+    private fun addArgument(parameter: Argument<*>) {
+        val lastArgument = lastArgument
+        if (lastArgument == null) {
+            rootArguments.add(parameter)
+            this.lastArgument = parameter
         } else {
-            lastParameter.addChild(parameter)
-            this.lastParameter = parameter
+            lastArgument.addChild(parameter)
+            this.lastArgument = parameter
         }
     }
 
@@ -117,42 +105,54 @@ class CommandBuilderImpl @AssistedInject constructor(
         intArgument(name, false, min, max) as CommandBuilder.Argument<Int>
 
     override fun intArgument(name: String, optional: Boolean, min: Int, max: Int): CommandBuilder.Argument<Int?> {
-        val parameter = MutableNumericParameter(name, optional = optional, min = min, max = max, type = Int::class)
+        val argument = IntArgument<Int?>(name, optional = optional, min = min, max = max)
 
-        addParameter(parameter)
+        addArgument(argument)
 
-        return ArgumentImpl()
+        return argument
     }
 
     override fun entitiesArgument(name: String): CommandBuilder.Argument<Set<Entity>> =
         entitiesArgument(name, false) as CommandBuilder.Argument<Set<Entity>>
 
     override fun entitiesArgument(name: String, optional: Boolean): CommandBuilder.Argument<Set<Entity>?> {
-        val parameter = MutableEntityParameter(name, optional = optional, multiple = true, playerOnly = false)
+        val argument = EntitiesArgument<Set<Entity>?>(name, optional = optional, playerOnly = false)
 
-        addParameter(parameter)
+        addArgument(argument)
 
-        return ArgumentImpl()
+        return argument
     }
 
     override fun option(name: String, configure: CommandBuilder.() -> Unit) {
         val commandBuilder = commandBuilderFactory.create(issuer)
         commandBuilder.configure()
-        val parameter = MutableOptionParameter(name, commandBuilder.mutableDefinition.rootParameters, optional = false)
+        val parameter = OptionArgument(name, optional = false)
+        executors.putAll(commandBuilder.executors)
 
-        val lastParameter = lastParameter
-        if (lastParameter is MutableOptionParameter) {
-            val lastParameterParent = lastParameter.parent
-            if (lastParameterParent == null) {
-                mutableDefinition.rootParameters.add(parameter)
+        val optionExecutor = commandBuilder.rootExecutor
+        if (optionExecutor != null) {
+            executors[parameter] = optionExecutor
+        }
+
+        val lastArgument = lastArgument
+        if (lastArgument is OptionArgument) {
+            val lastArgumentParent = lastArgument.parent
+            if (lastArgumentParent == null) {
+                rootArguments.add(parameter)
             } else {
-                lastParameterParent.addChild(parameter)
+                lastArgumentParent.addChild(parameter)
             }
         } else {
-            addParameter(parameter)
+            addArgument(parameter)
         }
     }
 
     override fun execute(executor: () -> Unit) {
+        val lastParameter = lastArgument
+        if (lastParameter == null) {
+            rootExecutor = executor
+        } else {
+            executors[lastParameter] = executor
+        }
     }
 }
