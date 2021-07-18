@@ -1,4 +1,4 @@
-package org.craftit.runtime.resources.plugin
+package org.craftit.runtime.resources.plugins
 
 import org.craftit.api.Server
 import org.craftit.runtime.server.ServerScope

@@ -12,41 +12,43 @@ repositories {
 val jvmProjects = listOf("api", "runtime", "test_plugin").map { project(it) }
 
 jvmProjects.forEach {
-    it.repositories {
-        mavenCentral()
-    }
-
-    it.apply(plugin = "org.jetbrains.kotlin.jvm")
-    it.apply(plugin = "idea")
-
-    val generatedKotlinDir = it.buildDir.resolve("generated/source/kotlin/main")
-
-    it.configure<SourceSetContainer> {
-        val main by getting
-
-        main.java {
-            setSrcDirs(srcDirs + generatedKotlinDir)
+    with(it) {
+        repositories {
+            mavenCentral()
         }
-    }
 
-    it.configure<org.gradle.plugins.ide.idea.model.IdeaModel> {
-        module {
-            generatedSourceDirs.add(generatedKotlinDir)
+        apply(plugin = "org.jetbrains.kotlin.jvm")
+        apply(plugin = "idea")
+
+        val generatedKotlinDir = buildDir.resolve("generated/source/kotlin/main")
+
+        configure<SourceSetContainer> {
+            val main by getting
+
+            main.java {
+                setSrcDirs(srcDirs + generatedKotlinDir)
+            }
         }
-    }
 
-    it.dependencies {
-        val implementation by it.configurations
-        val testImplementation by it.configurations
+        configure<org.gradle.plugins.ide.idea.model.IdeaModel> {
+            module {
+                generatedSourceDirs.add(generatedKotlinDir)
+            }
+        }
 
-        implementation(kotlin("stdlib"))
+        dependencies {
+            val implementation by configurations
+            val testImplementation by configurations
 
-        val kotestVersion = "4.5.0.RC1"
-        testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
-        testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-    }
+            implementation(kotlin("stdlib"))
 
-    it.tasks.withType<Test> {
-        useJUnitPlatform()
+            val kotestVersion = "4.5.0.RC1"
+            testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+            testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+        }
+
+        tasks.withType<Test> {
+            useJUnitPlatform()
+        } 
     }
 }

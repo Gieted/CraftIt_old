@@ -1,7 +1,7 @@
-package org.craftit.runtime.resources.plugin
+package org.craftit.runtime.resources.plugins
 
-import org.craftit.api.resources.plugin.Plugin
-import org.craftit.api.resources.plugin.PluginRegistry
+import org.craftit.api.resources.plugins.Plugin
+import org.craftit.api.resources.plugins.PluginRegistry
 import org.craftit.runtime.resources.ListRegistry
 import javax.inject.Inject
 

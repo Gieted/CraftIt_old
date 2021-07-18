@@ -1,4 +1,6 @@
-package org.craftit.api.resources.commands.parameters
+package org.craftit.api.builders
+
+import org.craftit.api.resources.commands.parameters.Parameter
 
 
 interface ParametersBuilder {

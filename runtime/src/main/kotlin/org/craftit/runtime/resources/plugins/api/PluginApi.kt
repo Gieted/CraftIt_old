@@ -1,4 +1,4 @@
-package org.craftit.runtime.resources.plugin
+package org.craftit.runtime.resources.plugins.api
 
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -9,11 +9,13 @@ import org.craftit.api.resources.IdGenerator
 import org.craftit.api.resources.commands.Command
 import org.craftit.api.resources.commands.CommandBuilder
 import org.craftit.api.resources.commands.parameters.Parameter
-import org.craftit.api.resources.commands.parameters.ParametersBuilder
+import org.craftit.api.builders.ParametersBuilder
+import org.craftit.api.builders.PluginBuilder
 import org.craftit.api.resources.entities.player.Player
-import org.craftit.api.resources.plugin.Plugin
+import org.craftit.api.resources.plugins.Plugin
 import org.craftit.runtime.resources.commands.QuickCommand
-import org.craftit.runtime.resources.commands.parameters.ParametersBuilderImpl
+import org.craftit.runtime.resources.plugins.api.builders.ParametersBuilderImpl
+import org.craftit.runtime.resources.plugins.api.builders.PluginBuilderImpl
 import org.craftit.runtime.resources.entities.player.VanillaPlayer
 import javax.inject.Provider
 
@@ -22,14 +24,22 @@ class PluginApi @AssistedInject constructor(
     @Assisted override val pluginId: String,
     override val idGenerator: IdGenerator,
     private val vanillaPlayerFactory: VanillaPlayer.Factory,
-    private val quickPluginFactory: QuickPlugin.Factory,
     private val quickCommandFactory: QuickCommand.Factory,
-    private val parametersBuilderProvider: Provider<ParametersBuilderImpl>
+    private val parametersBuilderProvider: Provider<ParametersBuilderImpl>,
+    private val pluginComponentFactory: PluginComponent.Factory
 ) : CraftIt {
 
     @AssistedFactory
     interface Factory {
         fun create(server: Server, pluginId: String): PluginApi
+    }
+
+    private val pluginBuilderProvider: Provider<PluginBuilderImpl>
+    
+    init {
+        val component = pluginComponentFactory.create(this)
+        
+        pluginBuilderProvider = component.pluginBuilderProvider()
     }
 
     override val commands = CommandsApi()
@@ -51,8 +61,12 @@ class PluginApi @AssistedInject constructor(
         }
     }
 
-    override fun plugin(commands: CraftIt.RegisterCommands.() -> Unit): Plugin =
-        quickPluginFactory.create(this, commands, pluginId)
+    override fun plugin(configure: PluginBuilder.() -> Unit): Plugin {
+        val pluginBuilder = pluginBuilderProvider.get()
+        pluginBuilder.configure()
+        
+        return pluginBuilder.build()
+    }
 
     override fun command(configure: CommandBuilder.() -> Unit): Command = quickCommandFactory.create(configure)
     

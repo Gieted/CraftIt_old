@@ -1,7 +1,8 @@
-package org.craftit.runtime.resources.commands.parameters
+package org.craftit.runtime.resources.plugins.api.builders
 
 import com.mojang.brigadier.tree.ArgumentCommandNode
 import com.mojang.brigadier.tree.LiteralCommandNode
+import org.craftit.api.builders.ParametersBuilder
 import org.craftit.api.resources.commands.parameters.*
 import org.craftit.runtime.resources.commands.ParameterConverter
 import javax.inject.Inject

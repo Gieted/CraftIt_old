@@ -7,6 +7,7 @@ import org.craftit.api.resources.commands.Command
 import org.craftit.api.resources.commands.CommandBuilder
 import org.craftit.api.resources.commands.CommandDefinition
 import org.craftit.api.resources.commands.CommandIssuer
+import org.craftit.runtime.resources.plugins.api.builders.CommandBuilderImpl
 
 
 class QuickCommand @AssistedInject constructor(
@@ -20,7 +21,7 @@ class QuickCommand @AssistedInject constructor(
     }
 
     override val id: String
-        get() = "craftit:command"
+        get() = "undefined"
 
     override val state: Any
         get() = Any()

@@ -4,8 +4,9 @@ import org.craftit.api.resources.IdGenerator
 import org.craftit.api.resources.commands.Command
 import org.craftit.api.resources.commands.CommandBuilder
 import org.craftit.api.resources.commands.parameters.Parameter
-import org.craftit.api.resources.commands.parameters.ParametersBuilder
-import org.craftit.api.resources.plugin.Plugin
+import org.craftit.api.builders.ParametersBuilder
+import org.craftit.api.builders.PluginBuilder
+import org.craftit.api.resources.plugins.Plugin
 
 interface CraftIt {
     val commands: Commands
@@ -13,11 +14,7 @@ interface CraftIt {
     val entities: Entities
     val pluginId: String
 
-    fun plugin(commands: RegisterCommands.() -> Unit): Plugin
-
-    interface RegisterCommands {
-        operator fun String.invoke(factory: Command.Factory)
-    }
+    fun plugin(configure: PluginBuilder.() -> Unit): Plugin
 
     interface Commands {
         fun register(defaultId: String, factory: Command.Factory)

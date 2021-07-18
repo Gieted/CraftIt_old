@@ -1,4 +1,4 @@
-package org.craftit.runtime.resources.commands
+package org.craftit.runtime.resources.plugins.api.builders
 
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -6,9 +6,8 @@ import dagger.assisted.AssistedInject
 import org.craftit.api.resources.commands.CommandBuilder
 import org.craftit.api.resources.commands.CommandDefinition
 import org.craftit.api.resources.commands.CommandIssuer
-import org.craftit.api.resources.commands.parameters.ParametersBuilder
+import org.craftit.api.builders.ParametersBuilder
 import org.craftit.api.resources.entities.Entity
-import org.craftit.runtime.resources.commands.parameters.ParametersBuilderImpl
 import javax.inject.Provider
 import kotlin.reflect.KProperty
 

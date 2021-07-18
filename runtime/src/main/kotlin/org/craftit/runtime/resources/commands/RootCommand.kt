@@ -4,7 +4,7 @@ import org.craftit.api.resources.commands.Command
 import org.craftit.api.resources.commands.CommandDefinition
 import org.craftit.api.resources.commands.CommandIssuer
 import org.craftit.api.resources.entities.player.Player
-import org.craftit.runtime.resources.commands.parameters.ParametersBuilderImpl
+import org.craftit.runtime.resources.plugins.api.builders.ParametersBuilderImpl
 import javax.inject.Inject
 import javax.inject.Provider
 

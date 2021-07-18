@@ -1,4 +1,4 @@
-package org.craftit.runtime.resources.plugin
+package org.craftit.runtime.resources.plugins
 
 import com.google.gson.Gson
 import dagger.assisted.Assisted
@@ -6,7 +6,8 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import org.craftit.api.CraftIt
 import org.craftit.api.Server
-import org.craftit.api.resources.plugin.Plugin
+import org.craftit.api.resources.plugins.Plugin
+import org.craftit.runtime.resources.plugins.api.PluginApi
 import java.io.File
 import java.net.URLClassLoader
 import java.util.zip.ZipFile

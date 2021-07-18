@@ -14,7 +14,7 @@ import org.craftit.api.resources.entities.player.PlayerRegistry
 import org.craftit.api.resources.entities.player.components.PlayerComponentsRegistry
 import org.craftit.api.resources.entities.player.components.online.OnlineComponent
 import org.craftit.api.resources.entities.player.components.online.OnlineComponentRegistry
-import org.craftit.api.resources.plugin.PluginRegistry
+import org.craftit.api.resources.plugins.PluginRegistry
 import org.craftit.runtime.configuration.Configuration
 import org.craftit.runtime.resources.VanillaIdGenerator
 import org.craftit.runtime.resources.commands.RootCommand
@@ -27,13 +27,14 @@ import org.craftit.runtime.resources.entities.player.components.VanillaPlayerCom
 import org.craftit.runtime.resources.entities.player.components.online_component.OnlineComponentComponent
 import org.craftit.runtime.resources.entities.player.components.online_component.VanillaOnlineComponent
 import org.craftit.runtime.resources.entities.player.components.online_component.VanillaOnlineComponentRegistry
-import org.craftit.runtime.resources.plugin.VanillaPluginRegistry
+import org.craftit.runtime.resources.plugins.VanillaPluginRegistry
+import org.craftit.runtime.resources.plugins.api.PluginComponent
 import org.craftit.runtime.server.initializers.NativeServerInitializer
 import org.craftit.runtime.server.initializers.VanillaServerInitializer
 import java.net.URLClassLoader
 import javax.inject.Named
 
-@Module(subcomponents = [PlayerDaggerComponent::class, OnlineComponentComponent::class])
+@Module(subcomponents = [PlayerDaggerComponent::class, OnlineComponentComponent::class, PluginComponent::class])
 abstract class ServerModule {
     companion object {
         @Provides

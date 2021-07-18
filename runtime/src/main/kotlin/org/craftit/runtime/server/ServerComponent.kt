@@ -5,8 +5,8 @@ import dagger.Subcomponent
 import org.craftit.api.Server
 import org.craftit.api.resources.commands.CommandRegistry
 import org.craftit.api.resources.entities.EntityRegistry
-import org.craftit.api.resources.plugin.PluginRegistry
-import org.craftit.runtime.resources.plugin.PluginLoader
+import org.craftit.api.resources.plugins.PluginRegistry
+import org.craftit.runtime.resources.plugins.PluginLoader
 import org.craftit.runtime.server.initializers.NativeServerInitializer
 
 @ServerScope

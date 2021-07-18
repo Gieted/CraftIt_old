@@ -1,4 +1,4 @@
-package org.craftit.api.resources.plugin
+package org.craftit.api.resources.plugins
 
 import org.craftit.api.resources.Resource
 
