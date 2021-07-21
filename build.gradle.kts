@@ -9,10 +9,10 @@ repositories {
     mavenCentral()
 }
 
-val jvmProjects = listOf("api", "runtime", "test_plugin").map { project(it) }
+val jvmProjects = listOf("runtime", "api", "test_plugin").map { project(it) }
 
 jvmProjects.forEach {
-    with(it) {
+    it.run {
         repositories {
             mavenCentral()
         }
@@ -49,6 +49,6 @@ jvmProjects.forEach {
 
         tasks.withType<Test> {
             useJUnitPlatform()
-        } 
+        }
     }
 }

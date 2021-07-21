@@ -21,7 +21,7 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.8.6")
 
-    implementation("com.mojang:brigadier:1.0.17")
+    implementation("com.mojang:brigadier:1.0.18")
 }
 
 tasks.getByPath("compileKotlin").apply {
