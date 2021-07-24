@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class PluginBuilderImpl @Inject constructor(private val craftIt: CraftIt) : PluginBuilder {
     
-    private inner class PluginImpl(craftIt: CraftIt, private val commandConfigurations: List<PluginBuilder.RegisterCommands.() -> Unit>) : Plugin {
+    private inner class PluginImpl(private val commandConfigurations: List<PluginBuilder.RegisterCommands.() -> Unit>) : Plugin {
         override val id: String
             get() = "undefined"
 
@@ -30,5 +30,5 @@ class PluginBuilderImpl @Inject constructor(private val craftIt: CraftIt) : Plug
         commandConfigurations.add(configure)
     }
 
-    fun build(): Plugin = PluginImpl(craftIt, commandConfigurations)
+    fun build(): Plugin = PluginImpl(commandConfigurations)
 }
