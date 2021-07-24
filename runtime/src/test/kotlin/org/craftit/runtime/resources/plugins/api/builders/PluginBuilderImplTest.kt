@@ -6,18 +6,15 @@ import io.mockk.verify
 import org.craftit.api.CraftIt
 
 class PluginBuilderImplTest : FunSpec({
-
     val craftIt = mockk<CraftIt>(relaxed = true)
-
+    val pluginBuilder = PluginBuilderImpl(craftIt)
+    
+    
     test("builds a plugin") {
-        val pluginBuilder = PluginBuilderImpl(craftIt)
-
         pluginBuilder.build()
     }
     
     test("registers provided commands") {
-        val pluginBuilder = PluginBuilderImpl(craftIt)
-
         val plugin = pluginBuilder.apply { 
             commands { 
                 "one" { mockk() }
@@ -26,7 +23,6 @@ class PluginBuilderImplTest : FunSpec({
         }.build()
         
         plugin.enable()
-        
         
         val commands = craftIt.commands
         verify(exactly = 1) { commands.register("one", any()) }

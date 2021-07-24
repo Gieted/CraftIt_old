@@ -17,12 +17,17 @@ class ParametersBuilderImpl private constructor(
     constructor(parameterConverter: ParameterConverter) : this(null, null, parameterConverter)
 
     private abstract class MutableParameter : Parameter, ParametersBuilder.ParameterRef {
-        private val mutableChildren = mutableListOf<MutableParameter>()
-        val refs = mutableListOf<List<MutableParameter>>()
-        override val children: List<MutableParameter> = mutableChildren + refs.flatten()
+        private val refs = mutableListOf<List<MutableParameter>>()
+        
+        override val children: List<MutableParameter>
+            get() = refs.flatten()
 
         fun addChild(parameter: MutableParameter) {
-            mutableChildren.add(parameter)
+            refs.add(listOf(parameter))
+        }
+
+        fun addRef(list: List<MutableParameter>) {
+            refs.add(list)
         }
     }
 
@@ -57,18 +62,28 @@ class ParametersBuilderImpl private constructor(
     private val parameters = mutableListOf<MutableParameter>()
     private val rootParameters = rootParameters ?: parameters
 
+    private fun processChildren(
+        children: (ParametersBuilder.(ParametersBuilder.ParameterRef) -> Unit)?,
+        parameter: MutableParameter
+    ) {
+        if (children != null) {
+            val parameterBuilder = ParametersBuilderImpl(parameter, rootParameters, parameterConverter)
+            parameterBuilder.children(parameter)
+            parameterBuilder.parameters.forEach { parameter.addChild(it) }
+        }
+    }
+
     override fun int(
         name: String,
         optional: Boolean,
         min: Int,
         max: Int,
-        children: ParametersBuilder.(ParametersBuilder.ParameterRef) -> Unit
+        children: (ParametersBuilder.(ParametersBuilder.ParameterRef) -> Unit)?
     ): ParametersBuilder.ParameterRef {
         val parameter = IntParameterImpl(name, optional, min, max)
-        val parameterBuilder = ParametersBuilderImpl(parameter, rootParameters, parameterConverter)
-        parameterBuilder.children(parameter)
-        parameterBuilder.parameters.forEach { parameter.addChild(it) }
         parameters.add(parameter)
+
+        processChildren(children, parameter)
 
         return parameter
     }
@@ -78,13 +93,12 @@ class ParametersBuilderImpl private constructor(
         optional: Boolean,
         multiple: Boolean,
         playerOnly: Boolean,
-        children: ParametersBuilder.(ParametersBuilder.ParameterRef) -> Unit
+        children: (ParametersBuilder.(ParametersBuilder.ParameterRef) -> Unit)?
     ): ParametersBuilder.ParameterRef {
         val parameter = EntityParameterImpl(name, optional, multiple, playerOnly)
-        val parameterBuilder = ParametersBuilderImpl(parameter, rootParameters, parameterConverter)
-        parameterBuilder.children(parameter)
-        parameterBuilder.parameters.forEach { parameter.addChild(it) }
         parameters.add(parameter)
+
+        processChildren(children, parameter)
 
         return parameter
     }
@@ -92,13 +106,12 @@ class ParametersBuilderImpl private constructor(
     override fun option(
         name: String,
         optional: Boolean,
-        children: ParametersBuilder.(ParametersBuilder.ParameterRef) -> Unit
+        children: (ParametersBuilder.(ParametersBuilder.ParameterRef) -> Unit)?
     ): ParametersBuilder.ParameterRef {
         val parameter = OptionParameterImpl(name, optional)
-        val parameterBuilder = ParametersBuilderImpl(parameter, rootParameters, parameterConverter)
-        parameterBuilder.children(parameter)
-        parameterBuilder.parameters.forEach { parameter.addChild(it) }
         parameters.add(parameter)
+
+        processChildren(children, parameter)
 
         return parameter
     }
@@ -161,12 +174,12 @@ class ParametersBuilderImpl private constructor(
     }
 
     override fun ParametersBuilder.ParameterRef.children() {
-        scopeParameter!!.refs.add((this as MutableParameter).children)
+        scopeParameter!!.addRef((this as MutableParameter).children)
     }
 
 
     override fun root() {
-        scopeParameter!!.refs.add(rootParameters)
+        scopeParameter!!.addRef(rootParameters)
     }
 
     operator fun invoke(configure: ParametersBuilder.() -> Unit): List<Parameter> {
