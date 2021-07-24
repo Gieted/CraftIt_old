@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":api"))
+    compileOnly(project(":api"))
 }
 
 tasks.jar {
