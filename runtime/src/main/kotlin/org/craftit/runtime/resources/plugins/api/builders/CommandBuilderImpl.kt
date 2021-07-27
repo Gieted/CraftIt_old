@@ -3,10 +3,10 @@ package org.craftit.runtime.resources.plugins.api.builders
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import org.craftit.api.builders.ParametersBuilder
 import org.craftit.api.resources.commands.CommandBuilder
 import org.craftit.api.resources.commands.CommandDefinition
 import org.craftit.api.resources.commands.CommandIssuer
-import org.craftit.api.builders.ParametersBuilder
 import org.craftit.api.resources.entities.Entity
 import javax.inject.Provider
 import kotlin.reflect.KProperty
@@ -19,7 +19,7 @@ class CommandBuilderImpl @AssistedInject constructor(
 ) : CommandBuilder {
 
     @AssistedFactory
-    interface Factory {
+    fun interface Factory {
         fun create(issuer: CommandIssuer): CommandBuilderImpl
     }
 

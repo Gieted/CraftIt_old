@@ -4,12 +4,10 @@ import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import com.mojang.brigadier.tree.ArgumentCommandNode
-import com.mojang.brigadier.tree.CommandNode
 import com.mojang.brigadier.tree.LiteralCommandNode
 import org.craftit.api.resources.commands.parameters.EntityParameter
 import org.craftit.api.resources.commands.parameters.IntParameter
 import org.craftit.api.resources.commands.parameters.OptionParameter
-import org.craftit.api.resources.commands.parameters.Parameter
 import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")

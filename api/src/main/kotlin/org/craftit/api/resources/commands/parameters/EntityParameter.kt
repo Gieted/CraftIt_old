@@ -6,5 +6,5 @@ interface EntityParameter : Parameter {
     val multiple: Boolean
     val playerOnly: Boolean
 
-    override fun <T> toBrigadierCommandNode(): ArgumentCommandNode<T, Any>
+    override fun <T> toBrigadierCommandNode(): ArgumentCommandNode<T, *>
 }

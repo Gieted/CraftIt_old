@@ -4,7 +4,7 @@ import com.mojang.brigadier.tree.CommandNode
 import org.craftit.api.resources.entities.player.Player
 import javax.inject.Inject
 
-class RootNoteFiller @Inject constructor(private val parameterConverter: ParameterConverter) {
+class RootNoteFiller @Inject constructor() {
     fun fillRootNote(rootNode: CommandNode<Any>, player: Player) {
         player.server.commands.root.getDefinition(player).rootParameters
             .map { it.toBrigadierCommandNode<Any>() }
