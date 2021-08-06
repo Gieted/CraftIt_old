@@ -1,4 +1,4 @@
-package org.craftit.runtime.resources.commands.parameters.argument_parsers
+package org.craftit.runtime.resources.commands.parsing.argument_parsers
 
 import org.craftit.api.resources.commands.parsing.ArgumentParser
 import org.craftit.api.resources.commands.CommandIssuer

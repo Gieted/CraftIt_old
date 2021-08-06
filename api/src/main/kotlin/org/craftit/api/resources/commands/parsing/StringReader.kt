@@ -19,4 +19,6 @@ interface StringReader {
     fun consumeChar(): Char
     
     fun consumeWhitespace()
+    
+    fun clone(): StringReader
 }

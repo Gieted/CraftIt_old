@@ -7,5 +7,5 @@ interface Parameter {
     val optional: Boolean
     val children: List<Parameter>
 
-    fun <T> toBrigadierCommandNode(): CommandNode<T>
+    fun <S> toBrigadierCommandNode(): CommandNode<S>
 }

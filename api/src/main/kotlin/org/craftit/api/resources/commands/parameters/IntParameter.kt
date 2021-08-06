@@ -6,5 +6,5 @@ interface IntParameter : Parameter {
     val min: Int
     val max: Int
 
-    override fun <T> toBrigadierCommandNode(): ArgumentCommandNode<T, Int>
+    override fun <S> toBrigadierCommandNode(): ArgumentCommandNode<S, Int>
 } 

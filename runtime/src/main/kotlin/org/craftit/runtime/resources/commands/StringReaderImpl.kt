@@ -1,10 +1,21 @@
 package org.craftit.runtime.resources.commands
 
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import org.craftit.api.resources.commands.parsing.ParsingException
 import org.craftit.api.resources.commands.parsing.StringReader
 
-class StringReaderImpl(private val string: String) : StringReader {
-    private var currentPosition: Int = 0
+class StringReaderImpl  (
+    private val string: String, private var currentPosition: Int = 0
+) : StringReader {
+
+    @AssistedInject constructor(@Assisted string: String): this(string, 0)
+
+    @AssistedFactory
+    interface Factory {
+        fun create(string: String): StringReaderImpl
+    }
 
     override val nextWord: String?
         get() {
@@ -56,5 +67,9 @@ class StringReaderImpl(private val string: String) : StringReader {
         while (nextChar?.isWhitespace() == true) {
             consumeChar()
         }
+    }
+
+    override fun clone(): StringReader {
+        return StringReaderImpl(string, currentPosition)
     }
 }

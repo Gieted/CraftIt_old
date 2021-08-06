@@ -13,10 +13,10 @@ import org.craftit.api.builders.ParametersBuilder
 import org.craftit.api.builders.PluginBuilder
 import org.craftit.api.resources.entities.player.Player
 import org.craftit.api.resources.plugins.Plugin
-import org.craftit.runtime.resources.commands.QuickCommand
 import org.craftit.runtime.resources.plugins.api.builders.ParametersBuilderImpl
 import org.craftit.runtime.resources.plugins.api.builders.PluginBuilderImpl
 import org.craftit.runtime.resources.entities.player.VanillaPlayer
+import org.craftit.runtime.resources.plugins.api.builders.CommandBuilderImpl
 import javax.inject.Provider
 
 class PluginApi @AssistedInject constructor(
@@ -24,7 +24,7 @@ class PluginApi @AssistedInject constructor(
     @Assisted override val pluginId: String,
     override val idGenerator: IdGenerator,
     private val vanillaPlayerFactory: VanillaPlayer.Factory,
-    private val quickCommandFactory: QuickCommand.Factory,
+    private val commandBuilderWrapperFactory: CommandBuilderImpl.Wrapper.Factory,
     private val parametersBuilderProvider: Provider<ParametersBuilderImpl>,
     private val pluginComponentFactory: PluginComponent.Factory
 ) : CraftIt {
@@ -68,7 +68,7 @@ class PluginApi @AssistedInject constructor(
         return pluginBuilder.build()
     }
 
-    override fun command(configure: CommandBuilder.() -> Unit): Command = quickCommandFactory.create(configure)
+    override fun command(configure: CommandBuilder.() -> Unit): Command = commandBuilderWrapperFactory.create(configure)
     
     override fun parameters(configure: ParametersBuilder.() -> Unit): List<Parameter> {
         val parameterBuilder =  parametersBuilderProvider.get()
