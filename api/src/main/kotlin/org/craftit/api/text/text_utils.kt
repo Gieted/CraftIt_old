@@ -1,7 +1,7 @@
-package org.craftit.api.text_utils
+package org.craftit.api.text
 
 import org.craftit.api.Color
-import org.craftit.api.Text
+import org.craftit.api.text.Text
 
 operator fun String.invoke(
     color: Color = Color.white,

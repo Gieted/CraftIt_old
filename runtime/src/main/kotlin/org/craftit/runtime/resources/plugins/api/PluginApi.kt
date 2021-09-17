@@ -5,18 +5,14 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import org.craftit.api.CraftIt
 import org.craftit.api.Server
+import org.craftit.api.builders.PluginBuilder
 import org.craftit.api.resources.IdGenerator
 import org.craftit.api.resources.commands.Command
 import org.craftit.api.resources.commands.CommandBuilder
-import org.craftit.api.resources.commands.parameters.Parameter
-import org.craftit.api.builders.ParametersBuilder
-import org.craftit.api.builders.PluginBuilder
 import org.craftit.api.resources.entities.player.Player
 import org.craftit.api.resources.plugins.Plugin
-import org.craftit.runtime.resources.plugins.api.builders.ParametersBuilderImpl
-import org.craftit.runtime.resources.plugins.api.builders.PluginBuilderImpl
 import org.craftit.runtime.resources.entities.player.VanillaPlayer
-import org.craftit.runtime.resources.plugins.api.builders.CommandBuilderImpl
+import org.craftit.runtime.resources.plugins.api.builders.PluginBuilderImpl
 import javax.inject.Provider
 
 class PluginApi @AssistedInject constructor(
@@ -24,9 +20,7 @@ class PluginApi @AssistedInject constructor(
     @Assisted override val pluginId: String,
     override val idGenerator: IdGenerator,
     private val vanillaPlayerFactory: VanillaPlayer.Factory,
-    private val commandBuilderWrapperFactory: CommandBuilderImpl.Wrapper.Factory,
-    private val parametersBuilderProvider: Provider<ParametersBuilderImpl>,
-    private val pluginComponentFactory: PluginComponent.Factory
+    pluginComponentFactory: PluginComponent.Factory
 ) : CraftIt {
 
     @AssistedFactory
@@ -68,12 +62,5 @@ class PluginApi @AssistedInject constructor(
         return pluginBuilder.build()
     }
 
-    override fun command(configure: CommandBuilder.() -> Unit): Command = commandBuilderWrapperFactory.create(configure)
-    
-    override fun parameters(configure: ParametersBuilder.() -> Unit): List<Parameter> {
-        val parameterBuilder =  parametersBuilderProvider.get()
-        parameterBuilder.configure()
-        
-        return parameterBuilder.build()
-    }
+    override fun command(configure: CommandBuilder.() -> Unit): Command = TODO()
 }

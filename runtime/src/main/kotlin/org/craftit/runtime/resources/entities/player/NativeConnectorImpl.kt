@@ -4,7 +4,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import org.craftit.api.resources.entities.player.connector.NativeConnector
-import org.craftit.api.resources.packets.DisplayMessagePacket
+import org.craftit.api.resources.packets.client.ServerChatMessagePacket
 import org.craftit.api.resources.packets.Packet
 import org.craftit.runtime.resources.packets.converters.PacketConverter
 import org.craftit.runtime.source_maps.SourceMap
@@ -38,7 +38,7 @@ class NativeConnectorImpl @AssistedInject constructor(
         listeners.add(listener)
     }
 
-    override fun sendPacket(packet: DisplayMessagePacket) {
+    override fun sendPacket(packet: ServerChatMessagePacket) {
         sendMethod.invoke(playNetHandler, packetConverter.convert(packet))
     }
 

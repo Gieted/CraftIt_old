@@ -7,11 +7,9 @@ import org.craftit.api.resources.entities.player.*
 import org.craftit.api.resources.entities.player.connector.Connector
 import org.craftit.api.resources.entities.player.connector.NativeConnector
 import org.craftit.api.resources.entities.player.connector.packet_handler.PacketHandler
-import org.craftit.api.resources.packets.DisplayMessagePacket
-import org.craftit.api.resources.packets.SendChatMessagePacket
-import org.craftit.runtime.resources.entities.player.PlayerScope
+import org.craftit.api.resources.packets.client.ServerChatMessagePacket
+import org.craftit.api.resources.packets.server.ClientChatMessagePacket
 import java.util.*
-import javax.inject.Inject
 
 class VanillaConnector @AssistedInject constructor(
     private val packetHandler: PacketHandler,
@@ -24,25 +22,14 @@ class VanillaConnector @AssistedInject constructor(
         override fun create(nativeConnector: NativeConnector): VanillaConnector
     }
 
-    override fun start() {
+    override fun connect() {
         nativeConnector.onPacket {
             when (it) {
-                is SendChatMessagePacket -> packetHandler.onChatMessage(it)
+                is ClientChatMessagePacket -> packetHandler.onChatMessage(it)
             }
         }
     }
 
     override fun sendUpdates() {
-        val model = player.components[VanillaOnlineComponent::class]!!.presenter.present()
-        model.messages.forEach {
-            nativeConnector.sendPacket(
-                DisplayMessagePacket(
-                    "minecraft:display_message",
-                    it.content,
-                    if (it.sender == null) DisplayMessagePacket.MessageType.System else DisplayMessagePacket.MessageType.Chat,
-                    UUID(0, 0)
-                )
-            )
-        }
     }
 }

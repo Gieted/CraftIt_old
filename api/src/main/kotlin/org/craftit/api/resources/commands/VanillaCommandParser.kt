@@ -1,8 +1,6 @@
 package org.craftit.api.resources.commands
 
-import javax.inject.Inject
-
-class VanillaCommandParser @Inject constructor() : CommandParser {
+class VanillaCommandParser : CommandParser {
     override fun parse(commandString: String): CommandParser.Result {
         val idAndArguments = commandString.split(" ")
 

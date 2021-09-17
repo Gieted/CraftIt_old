@@ -18,6 +18,5 @@ class Color(val hexCode: String) {
         val lightPurple = Color("#FF55FF")
         val yellow = Color("#FFFF55")
         val white = Color("#FFFFFF")
-        val minecoinGold = Color("#DDD605")
     }
 }

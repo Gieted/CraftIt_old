@@ -8,18 +8,17 @@ import javax.inject.Inject
 
 @ServerScope
 class PropertyManagerModifier @Inject constructor(
-    private val classLoader: ClassLoader,
-    private val sourceMap: SourceMap,
-    private val classPool: ClassPool,
-    private val protectionDomain: ProtectionDomain
-) : BytecodeModifier {
+    classPool: ClassPool,
+    sourceMap: SourceMap,
+    classLoader: ClassLoader,
+    protectionDomain: ProtectionDomain
+) : BytecodeModifier(classPool, sourceMap, classLoader, protectionDomain) {
 
     override fun modify() {
-        with(sourceMap { net.minecraft.server.dedicated.PropertyManager }) {
-            val propertyManager = classPool.get(this())
-
-            propertyManager.getDeclaredMethod(loadFromFile, arrayOf(classPool.get("java.nio.file.Path"))).setBody(
-                """{
+        modifyClass({ net.minecraft.server.dedicated.PropertyManager }) {
+            method(loadFromFile, "java.nio.file.Path") {
+                setBody(
+                    """{
                 java.util.Properties properties = new org.craftit.runtime.ConsistentProperties();
 
                 try {
@@ -31,10 +30,9 @@ class PropertyManagerModifier @Inject constructor(
                 }
 
                 return properties;
-                }"""
-            )
-
-            propertyManager.toClass(classLoader, protectionDomain)
+                    }"""
+                )
+            }
         }
     }
 }

@@ -5,9 +5,7 @@ import org.craftit.api.resources.components.ComponentStore
 import org.craftit.api.resources.entities.Entity
 import org.craftit.api.resources.entities.HealthHolder
 import org.craftit.api.resources.entities.player.components.PlayerComponent
-import org.craftit.api.resources.entities.player.components.online.OnlineComponent
 import org.craftit.api.resources.entities.player.controller.PlayerController
-import java.util.*
 
 interface Player : Entity, HealthHolder {
     

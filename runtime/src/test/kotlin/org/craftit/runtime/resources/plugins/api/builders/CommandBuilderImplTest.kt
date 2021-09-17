@@ -6,7 +6,7 @@ import org.craftit.api.resources.commands.CommandIssuer
 import javax.inject.Provider
 
 class CommandBuilderImplTest : FunSpec({
-    val issuer = mockk<CommandIssuer>()
+    /*val issuer = mockk<CommandIssuer>()
     val parameterBuilder = mockk<Provider<ParametersBuilderImpl>>()
     val factory = object : CommandBuilderImpl.Factory {
         override fun create(issuer: CommandIssuer): CommandBuilderImpl =
@@ -19,5 +19,5 @@ class CommandBuilderImplTest : FunSpec({
             execute {
             }
         }
-    }
+    }*/
 })

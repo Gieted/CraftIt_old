@@ -4,11 +4,10 @@ import org.craftit.api.resources.commands.Command
 import org.craftit.api.resources.commands.CommandDefinition
 import org.craftit.api.resources.commands.CommandIssuer
 import org.craftit.api.resources.entities.player.Player
-import org.craftit.runtime.resources.plugins.api.builders.ParametersBuilderImpl
 import javax.inject.Inject
 import javax.inject.Provider
 
-class RootCommand @Inject constructor(private val parametersBuilderProvider: Provider<ParametersBuilderImpl>) :
+class RootCommand @Inject constructor() :
     Command {
 
     override val id: String
@@ -18,13 +17,7 @@ class RootCommand @Inject constructor(private val parametersBuilderProvider: Pro
         get() = Any()
 
     override fun getDefinition(issuer: CommandIssuer): CommandDefinition =
-        CommandDefinition((parametersBuilderProvider.get()) {
-            (issuer as Player).server.commands.forEach { command ->
-                option(command.id) {
-                    command.getDefinition(issuer).rootParameters()
-                }
-            }
-        })
+        TODO()
 
     override fun execute(issuer: CommandIssuer, arguments: String) {
         val id = arguments.split(' ').first()

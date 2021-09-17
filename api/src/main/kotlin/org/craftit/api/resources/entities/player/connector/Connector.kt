@@ -7,7 +7,7 @@ interface Connector {
         fun create(nativeConnector: NativeConnector): Connector
     }
     
-    fun start()
+    fun connect()
     
     fun sendUpdates()
 }

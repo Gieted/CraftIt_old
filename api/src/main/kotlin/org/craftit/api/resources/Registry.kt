@@ -1,3 +1,3 @@
 package org.craftit.api.resources
 
-interface Registry<T> : Collection<T> 
+interface Registry<T : Resource> : Collection<T>

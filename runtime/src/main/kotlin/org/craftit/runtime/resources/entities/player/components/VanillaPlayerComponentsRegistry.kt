@@ -7,5 +7,5 @@ import javax.inject.Inject
 
 @ServerScope
 class VanillaPlayerComponentsRegistry @Inject constructor(
-    override val onlineComponent: OnlineComponentRegistry
+    override val online: OnlineComponentRegistry
 ) : PlayerComponentsRegistry

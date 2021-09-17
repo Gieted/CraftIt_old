@@ -1,6 +1,6 @@
 package org.craftit.runtime.resources.packets.converters
 
-import org.craftit.api.resources.packets.DisplayMessagePacket
+import org.craftit.api.resources.packets.client.ServerChatMessagePacket
 import org.craftit.runtime.resources.entities.player.ChatType
 import org.craftit.runtime.server.ServerScope
 import org.craftit.runtime.source_maps.SourceMap
@@ -22,10 +22,10 @@ class DisplayMessageConverter @Inject constructor(
         }
     }
 
-    fun convert(packet: DisplayMessagePacket): Any {
+    fun convert(packet: ServerChatMessagePacket): Any {
         val chatType = when (packet.type) {
-            DisplayMessagePacket.MessageType.Chat -> chatType.CHAT
-            DisplayMessagePacket.MessageType.System -> chatType.SYSTEM
+            ServerChatMessagePacket.MessageType.Chat -> chatType.CHAT
+            ServerChatMessagePacket.MessageType.System -> chatType.SYSTEM
             else -> chatType.GAME_INFO
         }
         

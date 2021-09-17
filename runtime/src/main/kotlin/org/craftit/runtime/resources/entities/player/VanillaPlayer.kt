@@ -4,15 +4,14 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import org.craftit.api.Server
-import org.craftit.api.Text
+import org.craftit.api.text.Text
 import org.craftit.api.chat.ChatParticipant
 import org.craftit.api.resources.components.ComponentStore
 import org.craftit.api.resources.entities.player.Player
 import org.craftit.api.resources.entities.player.components.PlayerComponent
+import org.craftit.api.resources.entities.player.components.online.OnlineComponent
 import org.craftit.api.resources.entities.player.controller.PlayerController
 import org.craftit.runtime.resources.entities.player.components.online_component.VanillaOnlineComponent
-import org.craftit.runtime.server.ServerScope
-import java.util.*
 
 class VanillaPlayer @AssistedInject constructor(
     playerComponentFactory: PlayerDaggerComponent.Factory,
@@ -29,17 +28,13 @@ class VanillaPlayer @AssistedInject constructor(
     
     override val components: ComponentStore<PlayerComponent> = ComponentStore()
 
+    override fun sendMessage(content: Text, sender: ChatParticipant?) {
+        components[OnlineComponent::class]?.sendMessage(content, sender)
+    }
+
     init {
         val component = playerComponentFactory.create(this)
         controller = component.controller()
-    } 
-
-    override fun sendMessage(content: Text) {
-        components[VanillaOnlineComponent::class]?.sendMessage(content)
-    }
-
-    override fun sendMessage(content: Text, sender: ChatParticipant) {
-        components[VanillaOnlineComponent::class]?.sendMessage(content, sender)
     }
 
     override var health: Int

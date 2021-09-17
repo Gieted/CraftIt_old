@@ -24,7 +24,7 @@ class ComponentStore<T: Component> : Collection<T> {
     
     fun attach(component: T) {
         components.add(component)
-        component.onAdded()
+        component.onAttach()
     }
     
     operator fun <V: T> contains(type: KClass<V>) = components.any { type == it::class }

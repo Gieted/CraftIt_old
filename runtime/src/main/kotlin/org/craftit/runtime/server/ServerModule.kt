@@ -14,6 +14,7 @@ import org.craftit.api.resources.entities.player.PlayerRegistry
 import org.craftit.api.resources.entities.player.components.PlayerComponentsRegistry
 import org.craftit.api.resources.entities.player.components.online.OnlineComponent
 import org.craftit.api.resources.entities.player.components.online.OnlineComponentRegistry
+import org.craftit.api.resources.items.ItemRegistry
 import org.craftit.api.resources.plugins.PluginRegistry
 import org.craftit.runtime.configuration.Configuration
 import org.craftit.runtime.resources.VanillaIdGenerator
@@ -27,6 +28,7 @@ import org.craftit.runtime.resources.entities.player.components.VanillaPlayerCom
 import org.craftit.runtime.resources.entities.player.components.online_component.OnlineComponentComponent
 import org.craftit.runtime.resources.entities.player.components.online_component.VanillaOnlineComponent
 import org.craftit.runtime.resources.entities.player.components.online_component.VanillaOnlineComponentRegistry
+import org.craftit.runtime.resources.items.VanillaItemRegistry
 import org.craftit.runtime.resources.plugins.VanillaPluginRegistry
 import org.craftit.runtime.resources.plugins.api.PluginComponent
 import org.craftit.runtime.server.initializers.NativeServerInitializer
@@ -86,4 +88,7 @@ abstract class ServerModule {
     
     @Binds
     abstract fun onlineComponentFactory(to: VanillaOnlineComponent.Factory): OnlineComponent.Factory
+
+    @Binds
+    abstract fun itemRegistry(to: VanillaItemRegistry): ItemRegistry
 }

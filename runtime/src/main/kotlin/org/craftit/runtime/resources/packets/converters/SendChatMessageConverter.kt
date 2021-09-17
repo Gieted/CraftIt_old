@@ -1,6 +1,6 @@
 package org.craftit.runtime.resources.packets.converters
 
-import org.craftit.api.resources.packets.SendChatMessagePacket
+import org.craftit.api.resources.packets.server.ClientChatMessagePacket
 import org.craftit.runtime.resources.packets.SendChatMessagePacketFactory
 import org.craftit.runtime.server.ServerScope
 import org.craftit.runtime.source_maps.SourceMap
@@ -20,6 +20,6 @@ class SendChatMessageConverter @Inject constructor(
         }
     }
 
-    fun convert(nativePacket: Any): SendChatMessagePacket =
+    fun convert(nativePacket: Any): ClientChatMessagePacket =
         sendChatMessagePacketFactory.create(getMessageMethod.invoke(nativePacket) as String)
 }

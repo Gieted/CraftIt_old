@@ -5,6 +5,7 @@ import dagger.Subcomponent
 import org.craftit.api.Server
 import org.craftit.api.resources.commands.CommandRegistry
 import org.craftit.api.resources.entities.EntityRegistry
+import org.craftit.api.resources.items.ItemRegistry
 import org.craftit.api.resources.plugins.PluginRegistry
 import org.craftit.runtime.resources.plugins.PluginLoader
 import org.craftit.runtime.server.initializers.NativeServerInitializer
@@ -22,6 +23,8 @@ interface ServerComponent {
     fun commandRegistry(): CommandRegistry
 
     fun pluginRegistry(): PluginRegistry
+
+    fun itemRegistry(): ItemRegistry
 
     @Subcomponent.Factory
     interface Factory {

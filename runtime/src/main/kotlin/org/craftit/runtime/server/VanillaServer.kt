@@ -3,6 +3,7 @@ package org.craftit.runtime.server
 import org.craftit.api.Server
 import org.craftit.api.resources.commands.CommandRegistry
 import org.craftit.api.resources.entities.EntityRegistry
+import org.craftit.api.resources.items.ItemRegistry
 import org.craftit.api.resources.plugins.PluginRegistry
 import org.craftit.runtime.resources.plugins.PluginLoader
 import org.craftit.runtime.server.initializers.NativeServerInitializer
@@ -15,6 +16,7 @@ class VanillaServer @Inject constructor(
     override val entities: EntityRegistry
     override val commands: CommandRegistry
     override val plugins: PluginRegistry
+    override val items: ItemRegistry
 
     private val pluginLoader: PluginLoader
 
@@ -27,6 +29,7 @@ class VanillaServer @Inject constructor(
         nativeServerInitializer = component.nativeServerInitializer()
         commands = component.commandRegistry()
         plugins = component.pluginRegistry()
+        items = component.itemRegistry()
     }
 
     override fun start() {

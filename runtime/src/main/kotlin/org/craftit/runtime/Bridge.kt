@@ -24,6 +24,7 @@ class Bridge @Inject constructor(
         bridge = this
         Bridge.rootNodeFiller = rootNodeFiller
         Bridge.packetConverter = packetConverter
+        Bridge.server = server
     }
 
     fun getConnectorM(playerUUID: UUID) =
@@ -38,7 +39,7 @@ class Bridge @Inject constructor(
             val nativeConnector = nativeConnectorFactory.create(playNetHandler)
             val nativePlayer = nativePlayerFactory.create(serverPlayerEntity, nativeConnector)
 
-            player.components.attach(server.entities.players.components.onlineComponent.create(player, nativePlayer))
+            player.components.attach(server.entities.players.components.online.create(player, nativePlayer))
             player.components.attach(runtimePlayerComponentFactory.create(nativeConnector, nativePlayer))
         }
     }
@@ -72,5 +73,8 @@ class Bridge @Inject constructor(
 
         @JvmStatic
         fun getPlayer(uuid: UUID) = bridge!!.getPlayerM(uuid)
+
+        @JvmField
+        var server: Server? = null
     }
 }

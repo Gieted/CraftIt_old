@@ -4,7 +4,6 @@ import org.craftit.api.resources.IdGenerator
 import org.craftit.api.resources.commands.Command
 import org.craftit.api.resources.commands.CommandBuilder
 import org.craftit.api.resources.commands.parameters.Parameter
-import org.craftit.api.builders.ParametersBuilder
 import org.craftit.api.builders.PluginBuilder
 import org.craftit.api.resources.plugins.Plugin
 
@@ -29,6 +28,4 @@ interface CraftIt {
     }
 
     fun command(configure: CommandBuilder.() -> Unit): Command
-    
-    fun parameters(configure: ParametersBuilder.() -> Unit): List<Parameter>
 }

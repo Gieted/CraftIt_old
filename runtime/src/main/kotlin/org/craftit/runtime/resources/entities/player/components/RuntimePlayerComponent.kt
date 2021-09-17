@@ -17,6 +17,6 @@ class RuntimePlayerComponent @AssistedInject constructor(
         fun create(nativeConnector: NativeConnectorImpl, nativePlayer: NativePlayerImpl): RuntimePlayerComponent
     }
 
-    override fun onAdded() {
+    override fun onAttach() {
     }
 }

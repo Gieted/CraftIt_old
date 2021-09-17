@@ -1,7 +1,7 @@
 package org.craftit.runtime.resources.entities.player.components.online_component
 
 import dagger.assisted.AssistedInject
-import org.craftit.api.Text
+import org.craftit.api.text.Text
 import org.craftit.api.chat.ChatParticipant
 import org.craftit.api.chat.Message
 import org.craftit.api.resources.entities.player.NativePlayer
@@ -38,16 +38,11 @@ class VanillaOnlineComponent @AssistedInject constructor(
 
     val messageQueue = mutableListOf<Message>()
 
-    override fun onAdded() {
-        connector.start()
+    override fun onAttach() {
+        connector.connect()
     }
 
-    override fun sendMessage(content: Text) {
-        messageQueue.add(Message(content))
-        connector.sendUpdates()
-    }
-
-    override fun sendMessage(content: Text, sender: ChatParticipant) {
+    override fun sendMessage(content: Text, sender: ChatParticipant?) {
         messageQueue.add(Message(content, sender))
         connector.sendUpdates()
     }

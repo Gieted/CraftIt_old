@@ -1,8 +1,9 @@
 package org.craftit.runtime.resources
 
 import org.craftit.api.resources.Registry
+import org.craftit.api.resources.Resource
 
-abstract class ListRegistry<T>: Registry<T> {
+abstract class AbstractRegistry<T : Resource>: Registry<T> {
     protected val list = mutableListOf<T>()
     
     override val size: Int

@@ -1,6 +1,6 @@
 package org.craftit.api.resources.commands
 
-import org.craftit.api.Text
+import org.craftit.api.text.Text
 import org.craftit.api.resources.Resource
 
 interface Command : Resource {

@@ -1,4 +1,6 @@
-package org.craftit.api
+package org.craftit.api.text
+
+import org.craftit.api.Color
 
 data class Text(val fragments: List<Fragment>) {
     data class Properties(

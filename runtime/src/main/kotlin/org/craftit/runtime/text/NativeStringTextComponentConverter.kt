@@ -1,6 +1,6 @@
 package org.craftit.runtime.text
 
-import org.craftit.api.Text
+import org.craftit.api.text.Text
 import org.craftit.runtime.server.ServerScope
 import org.craftit.runtime.source_maps.SourceMap
 import java.lang.reflect.Constructor
