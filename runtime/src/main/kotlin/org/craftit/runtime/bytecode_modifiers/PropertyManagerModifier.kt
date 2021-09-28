@@ -3,22 +3,20 @@ package org.craftit.runtime.bytecode_modifiers
 import javassist.ClassPool
 import org.craftit.runtime.server.ServerScope
 import org.craftit.runtime.source_maps.SourceMap
-import java.security.ProtectionDomain
 import javax.inject.Inject
 
 @ServerScope
 class PropertyManagerModifier @Inject constructor(
     classPool: ClassPool,
     sourceMap: SourceMap,
-    classLoader: ClassLoader,
-    protectionDomain: ProtectionDomain
-) : BytecodeModifier(classPool, sourceMap, classLoader, protectionDomain) {
+) : BytecodeModifier(classPool, sourceMap) {
 
-    override fun modify() {
+    override fun configure() {
         modifyClass({ net.minecraft.server.dedicated.PropertyManager }) {
-            method(loadFromFile, "java.nio.file.Path") {
-                setBody(
-                    """{
+            withSourceMap {
+                method(loadFromFile, "java.nio.file.Path") {
+                    setBody(
+                        """{
                 java.util.Properties properties = new org.craftit.runtime.ConsistentProperties();
 
                 try {
@@ -31,7 +29,8 @@ class PropertyManagerModifier @Inject constructor(
 
                 return properties;
                     }"""
-                )
+                    )
+                }
             }
         }
     }

@@ -121,8 +121,24 @@ tasks.register<GenerateSourceMap>("generateSourceMap") {
             "net.minecraft.network.IPacket" to listOf(),
 
             "net.minecraft.network.play.server.SChatPacket" to listOf(),
-            
-            "net.minecraft.network.NetworkManager" to listOf()
+
+            "net.minecraft.network.NetworkManager" to listOf(),
+
+            "net.minecraft.util.registry.DefaultedRegistry" to listOf(
+                "registerMapping",
+                "register"
+            ),
+
+            "net.minecraft.util.registry.Registry" to listOf(
+                "ITEM",
+                "ITEM_REGISTRY",
+                "registerDefaulted",
+                "internalRegister"
+            ),
+
+            "net.minecraft.util.registry.MutableRegistry" to listOf("register"),
+
+            "net.minecraft.util.RegistryKey" to listOf()
         )
     )
 }

@@ -31,7 +31,8 @@ abstract class MainModule {
         fun classPool(configuration: Configuration): ClassPool {
             val classPool = ClassPool.getDefault()
             classPool.appendClassPath(configuration.serverFile.absolutePath)
-
+            classPool.importPackage("com.mojang.serialization")
+            
             return classPool
         }
 

@@ -10,7 +10,7 @@ val vanilla1_16_5SourceMap = SourceMap.create {
         handleCustomCommandSuggestions = "a",
         send = "a"
     )
-    
+
     val Entity = net.minecraft.entity.Entity(
         "aqa",
         getUUID = "bS"
@@ -99,10 +99,33 @@ val vanilla1_16_5SourceMap = SourceMap.create {
         "se",
         getMessage = "b"
     )
-    
+
     net.minecraft.network.IPacket("oj")
 
     net.minecraft.network.play.server.SChatPacket("pb")
 
     net.minecraft.network.NetworkManager("nd")
+
+    net.minecraft.util.registry.Registry(
+        "gm",
+        ITEM = "T",
+        ITEM_REGISTRY = "m",
+        registerDefaulted = "a",
+        internalRegister = "a"
+    )
+
+    val MutableRegistry = net.minecraft.util.registry.MutableRegistry(
+        "gs",
+        register = "a"
+    )
+
+    net.minecraft.util.registry.DefaultedRegistry(
+        "gb",
+        registerMapping = "a",
+        register = MutableRegistry.register!!
+    )
+
+    net.minecraft.util.RegistryKey(
+        "vj"
+    )
 }

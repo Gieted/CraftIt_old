@@ -3,6 +3,7 @@ package org.craftit.runtime.server
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import javassist.ClassPool
 import org.craftit.api.resources.IdGenerator
 import org.craftit.api.resources.commands.Command
 import org.craftit.api.resources.commands.CommandParser
@@ -41,8 +42,9 @@ abstract class ServerModule {
     companion object {
         @Provides
         @ServerScope
-        fun classLoader(configuration: Configuration): ClassLoader =
-            URLClassLoader(arrayOf(configuration.serverFile.toURI().toURL()))
+        fun classLoader(classPool: ClassPool, configuration: Configuration): ClassLoader = javassist.Loader(
+            URLClassLoader(arrayOf(configuration.serverFile.toURI().toURL())), classPool
+        )
     }
 
     @Binds
@@ -64,7 +66,7 @@ abstract class ServerModule {
     @Binds
     @ServerScope
     abstract fun commandParser(to: VanillaCommandParser): CommandParser
-    
+
     @Binds
     @ServerScope
     @Named("root")
@@ -79,13 +81,13 @@ abstract class ServerModule {
 
     @Binds
     abstract fun playerComponentsRegistry(to: VanillaPlayerComponentsRegistry): PlayerComponentsRegistry
-    
+
     @Binds
     abstract fun onlineComponentRegistry(to: VanillaOnlineComponentRegistry): OnlineComponentRegistry
-    
+
     @Binds
     abstract fun playerFactory(to: VanillaPlayer.Factory): Player.Factory
-    
+
     @Binds
     abstract fun onlineComponentFactory(to: VanillaOnlineComponent.Factory): OnlineComponent.Factory
 
